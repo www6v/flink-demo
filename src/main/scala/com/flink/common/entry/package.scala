@@ -18,18 +18,19 @@ package object entry extends EnvironmentalKey {
   def getFlinkEnv(checkpointPath: String,interval:Long = 6000) = {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
 
-    env.enableCheckpointing(interval) //更新offsets。每60s提交一次
-    //超时
-    //env.getCheckpointConfig.setCheckpointTimeout(5000)
-    // 同一时间只允许进行一个检查点
-    env.getCheckpointConfig.setMaxConcurrentCheckpoints(1);
-    // 表示一旦Flink处理程序被cancel后，会保留Checkpoint数据，以便根据实际需要恢复到指定的Checkpoint
-    env.getCheckpointConfig.enableExternalizedCheckpoints(
-      ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
-    //env.setStateBackend(new FsStateBackend(checkpointPath))
-    val rocksDBStateBackend = new RocksDBStateBackend(checkpointPath)
-    rocksDBStateBackend.setDbStoragePath(checkpointPath + "/rocksdbstorage")
-    env.setStateBackend(rocksDBStateBackend)
+//    env.enableCheckpointing(interval) //更新offsets。每60s提交一次
+//    //超时
+//    //env.getCheckpointConfig.setCheckpointTimeout(5000)
+//    // 同一时间只允许进行一个检查点
+//    env.getCheckpointConfig.setMaxConcurrentCheckpoints(1);
+//    // 表示一旦Flink处理程序被cancel后，会保留Checkpoint数据，以便根据实际需要恢复到指定的Checkpoint
+//    env.getCheckpointConfig.enableExternalizedCheckpoints(
+//      ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
+//    env.setStateBackend(new FsStateBackend(checkpointPath))
+////    val rocksDBStateBackend = new RocksDBStateBackend(checkpointPath)
+////    rocksDBStateBackend.setDbStoragePath(checkpointPath + "/rocksdbstorage")
+////    env.setStateBackend(rocksDBStateBackend)
+
     env
   }
 

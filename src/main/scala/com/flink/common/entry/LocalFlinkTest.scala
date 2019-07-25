@@ -17,7 +17,8 @@ import com.flink.common.sink.{
 }
 
 object LocalFlinkTest {
-  val cp = "file:///C:\\Users\\Master\\Desktop\\rocksdbcheckpoint"
+//  val cp = "file:///C:\\Users\\Master\\Desktop\\rocksdbcheckpoint"
+  val cp = "/home/wei/flink/rocksdbcheckpoint"
 
   /**
     * @author LMQ
@@ -39,7 +40,8 @@ object LocalFlinkTest {
         val datas = x._2.split(",")
         val statdate = datas(0).substring(0, 10) //日期
         val hour = datas(0).substring(11, 13) //hour
-        val plan = datas(25)
+//        val plan = datas(25)
+        val plan = datas(1)
         if (plan.nonEmpty) {
           new AdlogBean(plan, statdate, hour, StatisticalIndic(1))
         } else null
@@ -51,9 +53,9 @@ object LocalFlinkTest {
       .flatMap(new AdlogPVRichFlatMapFunction) //通常都是用的flatmap，功能类似 (filter + map)
 
     //operate state。用于写hbase是吧恢复
-    result.addSink(new StateRecoverySinkCheckpointFunc(50))
+//    result.addSink(new StateRecoverySinkCheckpointFunc(50))
     //多个sink输出
-    //result.addSink(new SystemPrintSink)
+    result.addSink(new SystemPrintSink)
     //result.addSink(new HbaseReportSink)
 
     env.execute("lmq-flink-demo") //程序名
