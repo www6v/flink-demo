@@ -11,10 +11,7 @@ class AdlogPVRichFlatMapFunction
   var lastState: ValueState[StatisticalIndic] = _
 
   /**
-    * @author LMQ
     * @desc 每次一套
-    * @param value
-    * @param out
     */
   override def flatMap(value: AdlogBean, out: Collector[AdlogBean]): Unit = {
     val ls = lastState.value()
@@ -25,9 +22,7 @@ class AdlogPVRichFlatMapFunction
   }
 
   /**
-    * @author LMQ
     * @desc 当首次打开此operator的时候调用，拿到 此key的句柄
-    * @param parameters
     */
   override def open(parameters: Configuration): Unit = {
     val desc = new ValueStateDescriptor[(StatisticalIndic)](
