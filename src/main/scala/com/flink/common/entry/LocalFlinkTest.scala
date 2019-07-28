@@ -44,13 +44,13 @@ object LocalFlinkTest {
                         if(rtcClinetLog==null ||
                           rtcClinetLog.getData ==null ||
                           rtcClinetLog.getData.getVideo == null) {
-                                        return null;
+                                         null
 
                                         if (rtcClinetLog.getData.getVideo.getBr == null) {
-                                           return null
+                                            null
                                         }
                                         if (rtcClinetLog.getData.getVideo.getLostpre == null) {
-                                           return null
+                                            null
                                         }
                         }
 
