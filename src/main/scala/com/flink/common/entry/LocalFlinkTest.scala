@@ -41,10 +41,24 @@ object LocalFlinkTest {
             val rtcClinetLog: RtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
 //            val r = JSON.parseObject(x._2, Class[RtcClinetLog])
 
+                        if(rtcClinetLog==null ||
+                          rtcClinetLog.getData ==null ||
+                          rtcClinetLog.getData.getVideo == null) {
+                                        return null;
+
+                                        if (rtcClinetLog.getData.getVideo.getBr == null) {
+                                           return null
+                                        }
+                                        if (rtcClinetLog.getData.getVideo.getLostpre == null) {
+                                           return null
+                                        }
+                        }
+
             val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr)
             val lostpre  = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre)
 
             new AdlogBean(rtcClinetLog.getUid, br , lostpre ,StatisticalIndic(1))
+
 
 //            val datas = x._2.split(",")
 //            val statdate = datas(0).substring(0, 10) //日期

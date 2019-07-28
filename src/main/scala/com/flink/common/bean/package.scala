@@ -5,12 +5,12 @@ import scala.beans.BeanProperty
 package object bean {
 
   case class AdlogBean(
-                        var plan: String,
-                        var startdate: String,
-                        var hour: String,
+                        var userId: String,
+                        var br: String,
+                        var lostpre: String,
                         var pv: StatisticalIndic) {
     @BeanProperty
-    val key = s"${startdate},${plan},${hour}"
+    val key = s"${br},${userId},${lostpre}"
 
     override def toString() = {
       (key, pv).toString()
