@@ -7,7 +7,6 @@ import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
 
 import scala.collection.JavaConversions._
-import java.util.Properties
 
 import com.flink.common.bean.{AdlogBean, StatisticalIndic}
 import com.flink.common.richf.{
@@ -40,7 +39,6 @@ object LocalFlinkTest {
           {
 
             val rtcClinetLog: RtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
-//            val r = JSON.parseObject(x._2, Class[RtcClinetLog])
 
                         if(  rtcClinetLog==null ||
                           rtcClinetLog.getData ==null ||
@@ -53,10 +51,11 @@ object LocalFlinkTest {
                             null
                           }
                           else {
+                            val time = rtcClinetLog.getTs
                             val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr)
                             val lostpre  = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre)
 
-                            new AdlogBean(rtcClinetLog.getUid, br , lostpre ,StatisticalIndic(1))
+                            new AdlogBean(rtcClinetLog.getUid, br , lostpre ,time, StatisticalIndic(1))
                           }
                         }
 
