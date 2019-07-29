@@ -35,7 +35,7 @@ object LocalFlinkTest {
     val env = getFlinkEnv(cp,60000) // 1 min
     val result = env
       .addSource(kafkasource)
-      .filter { x => x != "" }
+      .filter { x => !x.equals("")  }
       .map { x =>
           {
 
