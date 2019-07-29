@@ -35,6 +35,7 @@ object LocalFlinkTest {
     val env = getFlinkEnv(cp,60000) // 1 min
     val result = env
       .addSource(kafkasource)
+      .filter { x => x != "" }
       .map { x =>
           {
 
@@ -44,21 +45,20 @@ object LocalFlinkTest {
                         if(rtcClinetLog==null ||
                           rtcClinetLog.getData ==null ||
                           rtcClinetLog.getData.getVideo == null) {
-                                         null
-
-                                        if (rtcClinetLog.getData.getVideo.getBr == null) {
-                                            null
-                                        }
-                                        if (rtcClinetLog.getData.getVideo.getLostpre == null) {
-                                            null
-                                        }
+                          null
                         }
+                        else {
+                          if (rtcClinetLog.getData.getVideo.getBr == null ||
+                            rtcClinetLog.getData.getVideo.getLostpre == null) {
+                            null
+                          }
+                          else {
+                            val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr)
+                            val lostpre  = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre)
 
-            val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr)
-            val lostpre  = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre)
-
-            new AdlogBean(rtcClinetLog.getUid, br , lostpre ,StatisticalIndic(1))
-
+                            new AdlogBean(rtcClinetLog.getUid, br , lostpre ,StatisticalIndic(1))
+                          }
+                        }
 
 //            val datas = x._2.split(",")
 //            val statdate = datas(0).substring(0, 10) //日期
