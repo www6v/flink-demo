@@ -11,7 +11,8 @@ package object bean {
                         var time:Long,
                         var pv: StatisticalIndic) {
     @BeanProperty
-    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
+//    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
+    val key = s"${userId}"
 
     override def toString() = {
       (key, pv).toString()
