@@ -42,7 +42,7 @@ object LocalFlinkTest {
             val rtcClinetLog: RtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
 //            val r = JSON.parseObject(x._2, Class[RtcClinetLog])
 
-                        if(rtcClinetLog==null ||
+                        if(  rtcClinetLog==null ||
                           rtcClinetLog.getData ==null ||
                           rtcClinetLog.getData.getVideo == null) {
                           null
