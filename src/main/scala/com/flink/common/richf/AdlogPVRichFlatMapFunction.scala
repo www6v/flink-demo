@@ -10,12 +10,14 @@ import java.util.Map.Entry;
 import java.util.Iterator;
 
 class AdlogPVRichFlatMapFunction
-    extends RichFlatMapFunction[AdlogBean, (String, Map[Long,AdlogBean] )] {
+//    extends RichFlatMapFunction[AdlogBean, (String, Map[Long,AdlogBean] )] {
+  extends RichFlatMapFunction[AdlogBean, (String, Long, Long, String, String)] {
+
   var lastState: ValueState[StatisticalIndic] = _
   var mapState: MapState[Long,AdlogBean] = _
 
   /**
-    * @desc 每次一套
+    *  每次一套
     */
 //  override def flatMap(value: AdlogBean, out: Collector[AdlogBean]): Unit = {
 //    val ls = lastState.value()
@@ -26,8 +28,10 @@ class AdlogPVRichFlatMapFunction
 //    out.collect(value)
 //  }
 
-//  ,
-  override def flatMap(value: AdlogBean, out: Collector[(String, Map[Long,AdlogBean]  )]): Unit = {
+
+  override def flatMap(value: AdlogBean, out: Collector[(String, Long, Long, String, String)]): Unit = {
+//  override def flatMap(value: AdlogBean, out: Collector[(String, Map[Long,AdlogBean]  )]): Unit = {
+
 //    val ls = lastState.value()
 //    val news = StatisticalIndic(ls.pv + value.pv.pv)
 //    lastState.update(news)
@@ -40,14 +44,16 @@ class AdlogPVRichFlatMapFunction
 
     val itor: Iterator[Entry[Long, AdlogBean]] = mapState.iterator();
 
-    var result: Map[Long, AdlogBean] = Map()
+//    var result: Map[Long, AdlogBean] = Map()
 
     while(itor.hasNext) {
       val next = itor.next()
-      result += (next.getKey -> next.getValue)
-    }
+//      result += (next.getKey -> next.getValue)
+      val timeKey = next.getKey
+      val v = next.getValue
 
-    out.collect(value.userId, result)  /// , mapState
+      out.collect((value.userId, timeKey, v.time, v.br, v.lostpre ))
+    }
   }
 
   /**
