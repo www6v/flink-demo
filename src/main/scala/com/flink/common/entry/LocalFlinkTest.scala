@@ -35,29 +35,27 @@ object LocalFlinkTest {
     val result = env
       .addSource(kafkasource)
       .filter { x => !x.equals("")  }
-      .map { x =>
-          {
-
+      .map { x => {
             val rtcClinetLog: RtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
 
-                        if(  rtcClinetLog==null ||
-                          rtcClinetLog.getData ==null ||
-                          rtcClinetLog.getData.getVideo == null) {
-                          null
-                        }
-                        else {
-                          if (rtcClinetLog.getData.getVideo.getBr == null ||
-                            rtcClinetLog.getData.getVideo.getLostpre == null) {
-                            null
-                          }
-                          else {
-                            val time = rtcClinetLog.getTs
-                            val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr)
-                            val lostpre  = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre)
+            if (rtcClinetLog == null ||
+              rtcClinetLog.getData == null ||
+              rtcClinetLog.getData.getVideo == null) {
+              null
+            }
+            else {
+              if (rtcClinetLog.getData.getVideo.getBr == null ||
+                rtcClinetLog.getData.getVideo.getLostpre == null) {
+                null
+              }
+              else {
+                val time = rtcClinetLog.getTs
+                val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr)
+                val lostpre = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre)
 
-                            new AdlogBean(rtcClinetLog.getUid, br , lostpre ,time, StatisticalIndic(1))
-                          }
-                        }
+                new AdlogBean(rtcClinetLog.getUid, br, lostpre, time, StatisticalIndic(1))
+              }
+            }
 
 //            val datas = x._2.split(",")
 //            val statdate = datas(0).substring(0, 10) //日期
@@ -69,7 +67,6 @@ object LocalFlinkTest {
 //            } else null
 
           }
-
       }
       .filter { x =>
         x != null
@@ -84,7 +81,6 @@ object LocalFlinkTest {
 //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
 //    result.addSink(new SystemPrintSink)
     //result.addSink(new HbaseReportSink)
-
 
     env.execute("rtc-log")
   }
