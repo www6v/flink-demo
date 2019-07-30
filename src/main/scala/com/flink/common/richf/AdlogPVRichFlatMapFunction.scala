@@ -10,61 +10,41 @@ import java.util.Map.Entry;
 import java.util.Iterator;
 
 class AdlogPVRichFlatMapFunction
-//    extends RichFlatMapFunction[AdlogBean, (String, Map[Long,AdlogBean] )] {
-  extends RichFlatMapFunction[AdlogBean, (String, Long, Long, String, String)] {
+  extends RichFlatMapFunction[AdlogBean, (String, Long, Long, String, String)]
+//    with ListCheckpointed[(String, Long, Long, String, String)]
+{
 
-  var lastState: ValueState[StatisticalIndic] = _
-  var mapState: MapState[Long,AdlogBean] = _
-
-  /**
-    *  每次一套
-    */
-//  override def flatMap(value: AdlogBean, out: Collector[AdlogBean]): Unit = {
-//    val ls = lastState.value()
-//    val news = StatisticalIndic(ls.pv + value.pv.pv)
-//    lastState.update(news)
-//    value.pv = news
-//
-//    out.collect(value)
-//  }
-
+//  var mapState: MapState[Long,AdlogBean] = _
+  private var metric:(String, Long, Long, String, String) = _
 
   override def flatMap(value: AdlogBean, out: Collector[(String, Long, Long, String, String)]): Unit = {
-//  override def flatMap(value: AdlogBean, out: Collector[(String, Map[Long,AdlogBean]  )]): Unit = {
-
-//    val ls = lastState.value()
-//    val news = StatisticalIndic(ls.pv + value.pv.pv)
-//    lastState.update(news)
-//    value.pv = news
+//    mapState.put(value.time, value)
 //
-//    out.collect(value)
+//    val itor: Iterator[Entry[Long, AdlogBean]] = mapState.iterator();
+//
+//    while(itor.hasNext) {
+//      val next = itor.next()
+//      val timeKey = next.getKey
+//      val v = next.getValue
+//
+//      out.collect((value.userId, timeKey, v.time, v.br, v.lostpre ))
+//    }
 
-    /////
-    mapState.put(value.time, value)
-
-    val itor: Iterator[Entry[Long, AdlogBean]] = mapState.iterator();
-
-//    var result: Map[Long, AdlogBean] = Map()
-
-    while(itor.hasNext) {
-      val next = itor.next()
-//      result += (next.getKey -> next.getValue)
-      val timeKey = next.getKey
-      val v = next.getValue
-
-      out.collect((value.userId, timeKey, v.time, v.br, v.lostpre ))
-    }
+    metric = (value.userId, value.time, value.time, value.br, value.lostpre )
+    out.collect(metric)
   }
 
-  /**
-    *  当首次打开此operator的时候调用，拿到 此key的句柄
-    */
-  override def open(parameters: Configuration): Unit = {
-//    val desc = new ValueStateDescriptor[(StatisticalIndic)]("StatisticalIndic", classOf[(StatisticalIndic)], StatisticalIndic(0))
-//    //desc.setQueryable("StatisticalIndic")
-//    lastState = getRuntimeContext().getState(desc)
+//  override def open(parameters: Configuration): Unit = {
+//    val mapDesc = new MapStateDescriptor[Long,AdlogBean]("StatisticalIndic", classOf[(Long)], classOf[(AdlogBean)] ) /// StatisticalIndic(0)
+//    mapState = getRuntimeContext().getMapState(mapDesc)
+//  }
 
-    val mapDesc = new MapStateDescriptor[Long,AdlogBean]("StatisticalIndic", classOf[(Long)], classOf[(AdlogBean)] ) /// StatisticalIndic(0)
-    mapState = getRuntimeContext().getMapState(mapDesc)
-  }
+//  override def restoreState(list: util.List[(String, Long, Long, String, String)]): Unit = {
+//  }
+//
+//  override def snapshotState(l: Long, l1: Long): util.List[(String, Long, Long, String, String)] = {
+//          val list : util.List[(String, Long, Long, String, String)] = new util.ArrayList();
+//          list.add(metric)
+//          list
+//  }
 }
