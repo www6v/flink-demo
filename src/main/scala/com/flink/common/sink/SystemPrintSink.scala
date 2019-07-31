@@ -33,7 +33,7 @@ import org.apache.flink.configuration.Configuration
     prometheusPush.push(gauge, "biteRateOfUser")
 
     gauge1.labels(userid).set(lostRate)
-    prometheusPush.push(gauge1, "biteRateOfUser")
+    prometheusPush.push(gauge1, "lostRateOfUser")
   }
 
   override def open( parameters:Configuration) {
