@@ -12,11 +12,11 @@ import org.apache.flink.streaming.api.functions.sink.{
 class SystemPrintSink extends SinkFunction[(String, Long, Long, String, String)] {
 
   val prometheusPush: PushGateway = new PushGateway("prometheus-gateway.app.pre.urome.cn")
-  private val gaugeDemo: Gauge = Gauge.build.name("bite rate of user").
+  private val gaugeDemo: Gauge = Gauge.build.name("biteRateOfTheUser").
     labelNames("userid" ).
     help("rtc monitor").register
 
-  private val gaugeDemo1: Gauge = Gauge.build.name("lost Rate of user").
+  private val gaugeDemo1: Gauge = Gauge.build.name("lostRateOfTheUser").
     labelNames("userid" ).
     help("rtc monitor").register
 
