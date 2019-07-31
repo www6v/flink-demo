@@ -79,8 +79,8 @@ object LocalFlinkTest {
 
     //operate state。用于写hbase是吧恢复
 //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
-//    result.addSink(new SystemPrintSink)
-    //result.addSink(new HbaseReportSink)
+    result.addSink(new SystemPrintSink)
+//    result.addSink(new HbaseReportSink)
 
     env.execute("rtc-log")
   }
