@@ -15,8 +15,8 @@ import org.apache.flink.configuration.Configuration
 
 
   var prometheusPush: PushGateway = _
-  var gaugeDemo: Gauge = _
-//  val gaugeDemo1: Gauge = _
+  var gauge: Gauge = _
+  var gauge1: Gauge = _
 
   override def invoke(value:(String, Long, Long, String, String) ): Unit = {
 //  override def invoke(value: AdlogBean): Unit = {
@@ -29,26 +29,27 @@ import org.apache.flink.configuration.Configuration
 
     val lostRate =value._5.toDouble;
 
-    gaugeDemo.labels(userid).set(br)
-    prometheusPush.push(gaugeDemo, "biteRateOfUser")
+    gauge.labels(userid).set(br)
+    prometheusPush.push(gauge, "biteRateOfUser")
 
-//    gaugeDemo1.labels(userid).set(lostRate)
-//    prometheusPush.push(gaugeDemo1, "biteRateOfUser")
+    gauge1.labels(userid).set(lostRate)
+    prometheusPush.push(gauge1, "biteRateOfUser")
   }
 
   override def open( parameters:Configuration) {
 
      prometheusPush = new PushGateway("prometheus-gateway.app.pre.urome.cn")
-     gaugeDemo  = Gauge.build.name("biteRateOfTheUser").
+     gauge  = Gauge.build.name("biteRateOfTheUser").
       labelNames("userid" ).
       help("rtc monitor").register
 
-//     gaugeDemo1: Gauge = Gauge.build.name("lostRateOfTheUser").
-//      labelNames("userid" ).
-//      help("rtc monitor").register
+    gauge1 = Gauge.build.name("lostRateOfTheUser").
+      labelNames("userid" ).
+      help("rtc monitor").register
   }
 
   override def close(): Unit = {
-    gaugeDemo.clear()
+    gauge.clear()
+    gauge1.clear()
   }
 }
