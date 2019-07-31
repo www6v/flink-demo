@@ -18,6 +18,7 @@ import com.flink.common.sink.{
   StateRecoverySinkCheckpointFunc,
   SystemPrintSink
 }
+import org.apache.flink.streaming.connectors.redis.RedisSink;
 
 object LocalFlinkTest {
 //  val cp = "file:///C:\\Users\\Master\\Desktop\\rocksdbcheckpoint"
