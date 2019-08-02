@@ -12,7 +12,7 @@ package object bean {
                         val frt : String,
                         val delay: Integer,
                         val time:Long,
-                        val pv: StatisticalIndic) {
+                        var pv: StatisticalIndic) {
     @BeanProperty
 //    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
     val key = s"${userId}"

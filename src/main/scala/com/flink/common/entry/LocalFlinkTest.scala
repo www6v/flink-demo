@@ -54,7 +54,7 @@ object LocalFlinkTest {
                 val uid: String = rtcClinetLog.getUid
                 val stype = rtcClinetLog.getStype  /// 流类别 1 发布流 2 订阅流
 
-                var delay:Integer;
+                var delay:Integer = -1
                 if(stype.equals(1)) { /// 1 发布流
                   delay = rtcClinetLog.getData.getRtt
                 }
