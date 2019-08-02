@@ -10,14 +10,14 @@ import java.util.Map.Entry;
 import java.util.Iterator;
 
 class AdlogPVRichFlatMapFunction
-  extends RichFlatMapFunction[AdlogBean, (String, Long, Long, String, String)]
+  extends RichFlatMapFunction[AdlogBean, (String, Integer, Long, String, String,String,Integer)]
 //    with ListCheckpointed[(String, Long, Long, String, String)]
 {
 
 //  var mapState: MapState[Long,AdlogBean] = _
-  private var metric:(String, Long, Long, String, String) = _
+  private var metric:(String, Integer, Long, String, String,String,Integer) = _
 
-  override def flatMap(value: AdlogBean, out: Collector[(String, Long, Long, String, String)]): Unit = {
+  override def flatMap(value: AdlogBean, out: Collector[(String, Integer, Long, String, String,String,Integer)]): Unit = {
 //    mapState.put(value.time, value)
 //
 //    val itor: Iterator[Entry[Long, AdlogBean]] = mapState.iterator();
@@ -30,9 +30,21 @@ class AdlogPVRichFlatMapFunction
 //      out.collect((value.userId, timeKey, v.time, v.br, v.lostpre ))
 //    }
 
-    metric = (value.userId, value.time, value.time, value.br, value.lostpre )
+    val userId: String = value.userId
+    val stype: Integer = value.stype
+    val time: Long = value.time
+    val br: String = value.br
+    val lostpre: String = value.lostpre
+    var frt : String = value.frt
+    var delay: Integer = value.delay
+
+    metric = (userId, stype, time, br, lostpre, frt, delay)
     out.collect(metric)
   }
+
+
+
+
 
 //  override def open(parameters: Configuration): Unit = {
 //    val mapDesc = new MapStateDescriptor[Long,AdlogBean]("StatisticalIndic", classOf[(Long)], classOf[(AdlogBean)] ) /// StatisticalIndic(0)

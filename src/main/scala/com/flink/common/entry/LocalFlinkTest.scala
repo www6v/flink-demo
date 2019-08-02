@@ -50,23 +50,29 @@ object LocalFlinkTest {
                 null
               }
               else {
-                val time = rtcClinetLog.getTs
-                val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr)
-                val lostpre = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre)
 
-                new AdlogBean(rtcClinetLog.getUid, br, lostpre, time, StatisticalIndic(1))
+                val uid: String = rtcClinetLog.getUid
+                val stype = rtcClinetLog.getStype  /// 流类别 1 发布流 2 订阅流
+
+                var delay:Integer;
+                if(stype.equals(1)) { /// 1 发布流
+                  delay = rtcClinetLog.getData.getRtt
+                }
+                if(stype.equals(2)) {
+                  delay = rtcClinetLog.getData.getDelay
+                }
+
+                val time = rtcClinetLog.getTs  // 时间
+
+                val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr) /// 码率
+                val lostpre = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre)  /// 丢包率
+                val frt = String.valueOf(rtcClinetLog.getData.getVideo.getFrt)  /// 发送的帧率
+
+                new AdlogBean(uid, stype,
+                  br, lostpre, frt,
+                  delay, time, StatisticalIndic(1))
               }
             }
-
-//            val datas = x._2.split(",")
-//            val statdate = datas(0).substring(0, 10) //日期
-//            val hour = datas(0).substring(11, 13) //hour
-//    //        val plan = datas(25)
-//            val plan = datas(1)
-//            if (plan.nonEmpty) {
-//              new AdlogBean(plan, statdate, hour, StatisticalIndic(1))
-//            } else null
-
           }
       }
       .filter { x =>
@@ -78,7 +84,7 @@ object LocalFlinkTest {
     result.setParallelism(1).writeAsText("/home/wei/flink/result/result.txt", WriteMode.OVERWRITE)
 
 
-    //operate state。用于写hbase是吧恢复
+    //operate state
 //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
     result.addSink(new SystemPrintSink)
 //    result.addSink(new HbaseReportSink)

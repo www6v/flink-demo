@@ -10,46 +10,67 @@ import org.apache.flink.streaming.api.functions.sink.{
 import org.apache.flink.configuration.Configuration
 
 //class SystemPrintSink extends SinkFunction[AdlogBean] {
-  class SystemPrintSink extends RichSinkFunction[(String, Long, Long, String, String)] {
+  class SystemPrintSink extends RichSinkFunction[(String, Integer, Long, String, String,String,Integer)] {
 //class SystemPrintSink extends SinkFunction[(String, Long, Long, String, String)] {
 
 
   var prometheusPush: PushGateway = _
-  var gauge: Gauge = _
-  var gauge1: Gauge = _
+  var gaugeBr: Gauge = _
+  var gaugeLostPre: Gauge = _
+  var gaugeFrt: Gauge = _
+  var gaugeDelay: Gauge = _
 
-  override def invoke(value:(String, Long, Long, String, String) ): Unit = {
+
+  override def invoke(value:(String, Integer, Long, String, String,String,Integer)): Unit = {
 //  override def invoke(value: AdlogBean): Unit = {
 //    println("SystemPrintSink",value)
 
-
-    val userid = value._1;
-    val time = value._2;
+    val userId = value._1;
+    val stype = value._2
+    val time = value._3;
     val br = value._4.toDouble;
+    val lostPre = value._5.toDouble;
+    val frt = value._6.toDouble;
+    val delay = value._7.toDouble;
 
-    val lostRate =value._5.toDouble;
+    gaugeBr.labels(userId).set(br)
+    prometheusPush.push(gaugeBr, "biteRateOfUser")
 
-    gauge.labels(userid).set(br)
-    prometheusPush.push(gauge, "biteRateOfUser")
+    gaugeLostPre.labels(userId).set(lostPre)
+    prometheusPush.push(gaugeLostPre, "lostPreOfUser")
 
-    gauge1.labels(userid).set(lostRate)
-    prometheusPush.push(gauge1, "lostRateOfUser")
+    gaugeFrt.labels(userId).set(frt)
+    prometheusPush.push(gaugeFrt, "frtOfUser")
+
+    gaugeDelay.labels(userId).set(delay)
+    prometheusPush.push(gaugeDelay, "delayOfUser")
   }
 
   override def open( parameters:Configuration) {
 
      prometheusPush = new PushGateway("prometheus-gateway.app.pre.urome.cn")
-     gauge  = Gauge.build.name("biteRateOfTheUser").
+
+     gaugeBr  = Gauge.build.name("biteRateOfTheUser").
       labelNames("userid" ).
       help("rtc monitor").register
 
-    gauge1 = Gauge.build.name("lostRateOfTheUser").
+    gaugeLostPre = Gauge.build.name("lostPreOfTheUser").
+      labelNames("userid" ).
+      help("rtc monitor").register
+
+    gaugeFrt  = Gauge.build.name("frtOfTheUser").
+      labelNames("userid" ).
+      help("rtc monitor").register
+
+    gaugeDelay  = Gauge.build.name("delayOfTheUser").
       labelNames("userid" ).
       help("rtc monitor").register
   }
 
   override def close(): Unit = {
-    gauge.clear()
-    gauge1.clear()
+    gaugeBr.clear()
+    gaugeLostPre.clear()
+    gaugeFrt.clear()
+    gaugeDelay.clear()
   }
 }
