@@ -18,7 +18,7 @@ import com.flink.common.sink.{
   StateRecoverySinkCheckpointFunc,
   SystemPrintSink
 }
-import org.apache.flink.streaming.connectors.redis.RedisSink;
+import com.flink.common.bean.AdlogBean
 
 object LocalFlinkTest {
 //  val cp = "file:///C:\\Users\\Master\\Desktop\\rocksdbcheckpoint"
@@ -37,46 +37,11 @@ object LocalFlinkTest {
       .addSource(kafkasource)
       .filter { x => !x.equals("")  }
       .map { x => {
-            var rtcClinetLog: RtcClinetLog = null
             try {
-              rtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
+              val rtcClinetLog: RtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
+              handleLog(rtcClinetLog)
             }catch {
-              case ex: JSONException => println("捕获了异常：" + ex)
-            }
-
-            if (rtcClinetLog == null ||
-              rtcClinetLog.getData == null ||
-              rtcClinetLog.getData.getVideo == null) {
-              null
-            }
-            else {
-              if (rtcClinetLog.getData.getVideo.getBr == null ||
-                rtcClinetLog.getData.getVideo.getLostpre == null) {
-                null
-              }
-              else {
-
-                val uid: String = rtcClinetLog.getUid
-                val stype = rtcClinetLog.getStype  /// 流类别 1 发布流 2 订阅流
-
-                var delay:Integer = -1
-                if(stype.equals(1)) { /// 1 发布流
-                  delay = rtcClinetLog.getData.getRtt
-                }
-                if(stype.equals(2)) {
-                  delay = rtcClinetLog.getData.getDelay
-                }
-
-                val time = rtcClinetLog.getTs  // 时间
-
-                val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr) /// 码率
-                val lostpre = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre)  /// 丢包率
-                val frt = String.valueOf(rtcClinetLog.getData.getVideo.getFrt)  /// 发送的帧率
-
-                new AdlogBean(uid, stype,
-                  br, lostpre, frt,
-                  delay, time, StatisticalIndic(1))
-              }
+              case ex: JSONException => {println("捕获了异常：" + ex); null}
             }
           }
       }
@@ -97,4 +62,41 @@ object LocalFlinkTest {
     env.execute("rtc-log")
   }
 
+  def handleLog(rtcClinetLog: RtcClinetLog): AdlogBean = {
+    if (rtcClinetLog == null ||
+      rtcClinetLog.getData == null ||
+      rtcClinetLog.getData.getVideo == null) {
+      null
+    }
+    else {
+      if (rtcClinetLog.getData.getVideo.getBr == null ||
+        rtcClinetLog.getData.getVideo.getLostpre == null) {
+        null
+      }
+      else {
+
+        val uid: String = rtcClinetLog.getUid
+        val stype = rtcClinetLog.getStype /// 流类别 1 发布流 2 订阅流
+
+        var delay: Integer = -1
+        if (stype.equals(1)) {
+          /// 1 发布流
+          delay = rtcClinetLog.getData.getRtt
+        }
+        if (stype.equals(2)) {
+          delay = rtcClinetLog.getData.getDelay
+        }
+
+        val time = rtcClinetLog.getTs // 时间
+
+        val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr) /// 码率
+        val lostpre = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre) /// 丢包率
+        val frt = String.valueOf(rtcClinetLog.getData.getVideo.getFrt) /// 发送的帧率
+
+        new AdlogBean(uid, stype,
+          br, lostpre, frt,
+          delay, time, StatisticalIndic(1))
+      }
+    }
+  }
 }

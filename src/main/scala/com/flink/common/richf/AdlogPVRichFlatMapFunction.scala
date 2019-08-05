@@ -27,18 +27,18 @@ class AdlogPVRichFlatMapFunction
 //      val timeKey = next.getKey
 //      val v = next.getValue
 //
-//      out.collect((value.userId, timeKey, v.time, v.br, v.lostpre ))
+//      out.collect((value.userId, timeKey, v.time, v.br, v.lostPre ))
 //    }
 
     val userId: String = value.userId
-    val stype: Integer = value.stype
+    val sType: Integer = value.stype
     val time: Long = value.time
     val br: String = value.br
-    val lostpre: String = value.lostpre
-    var frt : String = value.frt
-    var delay: Integer = value.delay
+    val lostPre: String = value.lostpre
+    val frt : String = value.frt
+    val delay: Integer = value.delay
 
-    metric = (userId, stype, time, br, lostpre, frt, delay)
+    metric = (userId, sType, time, br, lostPre, frt, delay)
     out.collect(metric)
   }
 
