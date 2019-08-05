@@ -40,16 +40,20 @@ import org.apache.flink.configuration.Configuration
     val frtStr = value._6
     val delayStr = value._7.toString
 
-    gaugeBr.labels(userId,lostPreStr, frtStr,delayStr).set(br)
+//    gaugeBr.labels(userId,lostPreStr, frtStr,delayStr).set(br)
+    gaugeBr.labels(userId).set(br)
     prometheusPush.push(gaugeBr, "biteRateOfUser")
 
-    gaugeLostPre.labels(userId, brStr, frtStr, delayStr).set(lostPre)
+//    gaugeLostPre.labels(userId, brStr, frtStr, delayStr).set(lostPre)
+    gaugeLostPre.labels(userId).set(lostPre)
     prometheusPush.push(gaugeLostPre, "lostPreOfUser")
 
-    gaugeFrt.labels(userId, brStr, lostPreStr, delayStr).set(frt)
+//    gaugeFrt.labels(userId, brStr, lostPreStr, delayStr).set(frt)
+    gaugeFrt.labels(userId).set(frt)
     prometheusPush.push(gaugeFrt, "frtOfUser")
 
-    gaugeDelay.labels(userId, brStr,lostPreStr,frtStr).set(delay)
+//    gaugeDelay.labels(userId, brStr,lostPreStr,frtStr).set(delay)
+    gaugeDelay.labels(userId).set(delay)
     prometheusPush.push(gaugeDelay, "delayOfUser")
   }
 
@@ -59,30 +63,30 @@ import org.apache.flink.configuration.Configuration
 
      gaugeBr  = Gauge.build.name("biteRateOfTheUser").
       labelNames("userid" ).
-      labelNames("lostPre" ).
-      labelNames("frt" ).
-      labelNames("delay" ).
+//      labelNames("lostPre" ).
+//      labelNames("frt" ).
+//      labelNames("delay" ).
       help("rtc monitor").register
 
     gaugeLostPre = Gauge.build.name("lostPreOfTheUser").
       labelNames("userid" ).
-      labelNames("br" ).
-      labelNames("frt" ).
-      labelNames("delay" ).
+//      labelNames("br" ).
+//      labelNames("frt" ).
+//      labelNames("delay" ).
       help("rtc monitor").register
 
     gaugeFrt  = Gauge.build.name("frtOfTheUser").
       labelNames("userid" ).
-      labelNames("br" ).
-      labelNames("lostPre" ).
-      labelNames("delay" ).
+//      labelNames("br" ).
+//      labelNames("lostPre" ).
+//      labelNames("delay" ).
       help("rtc monitor").register
 
     gaugeDelay  = Gauge.build.name("delayOfTheUser").
       labelNames("userid" ).
-      labelNames("br" ).
-      labelNames("lostPre" ).
-      labelNames("frt" ).
+//      labelNames("br" ).
+//      labelNames("lostPre" ).
+//      labelNames("frt" ).
       help("rtc monitor").register
   }
 

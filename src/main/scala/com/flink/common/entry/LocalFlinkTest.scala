@@ -41,7 +41,7 @@ object LocalFlinkTest {
               val rtcClinetLog: RtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
               handleLog(rtcClinetLog)
             }catch {
-              case ex: JSONException => {println("捕获了异常：" + ex); null}
+              case ex: Exception => {println("捕获了异常：" + ex); null}
             }
           }
       }

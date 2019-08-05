@@ -10,5 +10,6 @@ val BROKER = "172.25.15.161:9092,172.25.10.135:9092,172.25.5.62:9092"
 //  val TOPIC = "flink-kafka-1"
 
 //  val TOPIC = "flink-rtc-log"
-  val TOPIC = "flink-rtc-log-2"
+//  val TOPIC = "flink-rtc-log-2" // fluentd
+  val TOPIC = "flink-rtc-log-3"
 }
