@@ -26,23 +26,30 @@ import org.apache.flink.configuration.Configuration
 //    println("SystemPrintSink",value)
 
     val userId = value._1;
+
     val stype = value._2
     val time = value._3;
+
     val br = value._4.toDouble;
     val lostPre = value._5.toDouble;
     val frt = value._6.toDouble;
     val delay = value._7.toDouble;
 
-    gaugeBr.labels(userId).set(br)
+    val brStr = value._4
+    val lostPreStr = value._5
+    val frtStr = value._6
+    val delayStr = value._7.toString
+
+    gaugeBr.labels(userId,lostPreStr, frtStr,delayStr).set(br)
     prometheusPush.push(gaugeBr, "biteRateOfUser")
 
-    gaugeLostPre.labels(userId).set(lostPre)
+    gaugeLostPre.labels(userId, brStr, frtStr, delayStr).set(lostPre)
     prometheusPush.push(gaugeLostPre, "lostPreOfUser")
 
-    gaugeFrt.labels(userId).set(frt)
+    gaugeFrt.labels(userId, brStr, lostPreStr, delayStr).set(frt)
     prometheusPush.push(gaugeFrt, "frtOfUser")
 
-    gaugeDelay.labels(userId).set(delay)
+    gaugeDelay.labels(userId, brStr,lostPreStr,frtStr).set(delay)
     prometheusPush.push(gaugeDelay, "delayOfUser")
   }
 
@@ -51,19 +58,31 @@ import org.apache.flink.configuration.Configuration
      prometheusPush = new PushGateway("prometheus-gateway.app.pre.urome.cn")
 
      gaugeBr  = Gauge.build.name("biteRateOfTheUser").
-      labelNames("userid" ).
+      labelNames("用户" ).
+      labelNames("丢包率" ).
+      labelNames("帧率" ).
+      labelNames("延迟" ).
       help("rtc monitor").register
 
     gaugeLostPre = Gauge.build.name("lostPreOfTheUser").
-      labelNames("userid" ).
+      labelNames("用户" ).
+      labelNames("码率" ).
+      labelNames("帧率" ).
+      labelNames("延迟" ).
       help("rtc monitor").register
 
     gaugeFrt  = Gauge.build.name("frtOfTheUser").
-      labelNames("userid" ).
+      labelNames("用户" ).
+      labelNames("码率" ).
+      labelNames("丢包率" ).
+      labelNames("延迟" ).
       help("rtc monitor").register
 
     gaugeDelay  = Gauge.build.name("delayOfTheUser").
-      labelNames("userid" ).
+      labelNames("用户" ).
+      labelNames("码率" ).
+      labelNames("丢包率" ).
+      labelNames("帧率" ).
       help("rtc monitor").register
   }
 

@@ -1,6 +1,6 @@
 package com.flink.common.entry
 
-import com.alibaba.fastjson.{TypeReference, JSON}
+import com.alibaba.fastjson.{JSONException, TypeReference, JSON}
 import com.flink.common.domain.RtcClinetLog
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.scala._
@@ -37,7 +37,12 @@ object LocalFlinkTest {
       .addSource(kafkasource)
       .filter { x => !x.equals("")  }
       .map { x => {
-            val rtcClinetLog: RtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
+            var rtcClinetLog: RtcClinetLog = null
+            try {
+              rtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
+            }catch {
+              case ex: JSONException => println("捕获了异常：" + ex)
+            }
 
             if (rtcClinetLog == null ||
               rtcClinetLog.getData == null ||
