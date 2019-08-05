@@ -58,31 +58,31 @@ import org.apache.flink.configuration.Configuration
      prometheusPush = new PushGateway("prometheus-gateway.app.pre.urome.cn")
 
      gaugeBr  = Gauge.build.name("biteRateOfTheUser").
-      labelNames("用户" ).
-      labelNames("丢包率" ).
-      labelNames("帧率" ).
-      labelNames("延迟" ).
+      labelNames("userid" ).
+      labelNames("lostPre" ).
+      labelNames("frt" ).
+      labelNames("delay" ).
       help("rtc monitor").register
 
     gaugeLostPre = Gauge.build.name("lostPreOfTheUser").
-      labelNames("用户" ).
-      labelNames("码率" ).
-      labelNames("帧率" ).
-      labelNames("延迟" ).
+      labelNames("userid" ).
+      labelNames("br" ).
+      labelNames("frt" ).
+      labelNames("delay" ).
       help("rtc monitor").register
 
     gaugeFrt  = Gauge.build.name("frtOfTheUser").
-      labelNames("用户" ).
-      labelNames("码率" ).
-      labelNames("丢包率" ).
-      labelNames("延迟" ).
+      labelNames("userid" ).
+      labelNames("br" ).
+      labelNames("lostPre" ).
+      labelNames("delay" ).
       help("rtc monitor").register
 
     gaugeDelay  = Gauge.build.name("delayOfTheUser").
-      labelNames("用户" ).
-      labelNames("码率" ).
-      labelNames("丢包率" ).
-      labelNames("帧率" ).
+      labelNames("userid" ).
+      labelNames("br" ).
+      labelNames("lostPre" ).
+      labelNames("frt" ).
       help("rtc monitor").register
   }
 
