@@ -4,7 +4,7 @@ import com.alibaba.fastjson.{JSON, TypeReference}
 import com.flink.common.bean.{MonitorBean, AdlogBean, StatisticalIndic}
 import com.flink.common.domain.RtcClinetLog
 import com.flink.common.richf.{RtcMonitorRichFlatMapFunction, AdlogPVRichFlatMapFunction}
-import com.flink.common.sink.SystemPrintSink
+import com.flink.common.sink.{MonitorPrintSink, SystemPrintSink}
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
@@ -55,7 +55,7 @@ object RtcMonitor {
 
     //operate state
     //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
-    result.addSink(new SystemPrintSink)
+    result.addSink(new MonitorPrintSink)
     //    result.addSink(new HbaseReportSink)
     env
   }
