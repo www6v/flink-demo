@@ -20,15 +20,16 @@ object RtcMonitor {
 
     val kafkaSource: FlinkKafkaConsumer08[(String, String)] = getKafkaSource
 
-    val env: StreamExecutionEnvironment = handleCallStats(kafkaSource)
-    val env1: StreamExecutionEnvironment = handleCallStats(kafkaSource)
+    val env = getFlinkEnv(cp, 60000) // 1 min
+    handleCallStats(env,kafkaSource)
+    handleCallStats(env,kafkaSource)
 
     env.execute("rtc-log")
-    env1.execute("rtc-log-1")
+//    env1.execute("rtc-log-1")
   }
 
-  def handleCallStats(kafkasource: FlinkKafkaConsumer08[(String, String)]): StreamExecutionEnvironment = {
-    val env = getFlinkEnv(cp, 60000) // 1 min
+  def handleCallStats(env:StreamExecutionEnvironment,kafkasource: FlinkKafkaConsumer08[(String, String)]): Unit = {
+//    val env = getFlinkEnv(cp, 60000) // 1 min
     val result = env
         .addSource(kafkasource)
         .filter { x => !x.equals("") }
