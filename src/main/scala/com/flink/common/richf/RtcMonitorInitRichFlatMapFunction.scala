@@ -14,12 +14,16 @@ class RtcMonitorInitRichFlatMapFunction
   private var metric:(String,  String, Long, Integer) = _
 
   override def flatMap(value: MonitorRoomBean, out: Collector[(String,  String, Long, Integer)]): Unit = {
-    var userAmount = userCount.value()
+//    var userAmount = userCount.value()
+    var userAmount = 0
 
     val roomId: String = value.roomId
     val userId: String = value.userId
 //    val time: Long = value.time
     val time: Long = 111111L
+    println("roomId",roomId)
+    println("userId",userId)
+//    println("userAmount",userAmount)
 
     metric = (roomId, userId, time, userAmount)
     out.collect(metric)
