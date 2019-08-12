@@ -22,7 +22,7 @@ object RtcMonitor {
 
     val env = getFlinkEnv(cp, 60000) // 1 min
     handleCallInitStats(env,kafkaSource)
-    handleCallStats(env,kafkaSource)
+//    handleCallStats(env,kafkaSource)
 
     env.execute("rtc-log")
 //    env1.execute("rtc-log-1")
