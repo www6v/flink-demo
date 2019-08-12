@@ -13,9 +13,14 @@ class RtcMonitorInitRichFlatMapFunction
 
   private var metric:(String,  String, Long, Integer) = _
 
+  override def open(parameters: Configuration): Unit = {
+    val userCountDescriptor = new ValueStateDescriptor[Integer]("userCount", classOf[Integer])
+    userCount = getRuntimeContext.getState[Integer](userCountDescriptor)
+  }
+  
   override def flatMap(value: MonitorRoomBean, out: Collector[(String,  String, Long, Integer)]): Unit = {
-//    var userAmount = userCount.value()
-    var userAmount = 0
+    val userAmount = userCount.value()
+//    var userAmount = 0
 
     val roomId: String = value.roomId
     val userId: String = value.userId
@@ -23,19 +28,16 @@ class RtcMonitorInitRichFlatMapFunction
     val time: Long = 111111L
     println("roomId",roomId)
     println("userId",userId)
-//    println("userAmount",userAmount)
+    println("userAmount",userAmount)
 
     metric = (roomId, userId, time, userAmount)
     out.collect(metric)
 
-    userAmount += 1
+//    userAmount += 1
     this.userCount.update(userAmount)
   }
 
-  override def open(parameters: Configuration): Unit = {
-    val userCountDescriptor = new ValueStateDescriptor[Integer]("userCount", classOf[Integer])
-    userCount = getRuntimeContext.getState[Integer](userCountDescriptor)
-  }
+
 
 //  override def open(parameters: Configuration): Unit = {
 //    val mapDesc = new MapStateDescriptor[Long,AdlogBean]("StatisticalIndic", classOf[(Long)], classOf[(AdlogBean)] ) /// StatisticalIndic(0)
