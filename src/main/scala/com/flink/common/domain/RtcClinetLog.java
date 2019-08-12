@@ -6,7 +6,7 @@ public class RtcClinetLog {
     private String version; ///: 1.0,
     private String rpc_id; ///: xxxx,
     private Integer mtype; ///: 1 cam 2 screen,
-    private Integer type; ///:int 1,
+    private Integer type; /// log分类 取值 1 2 3, 1 通话开始 2 通话状态 3 通话结束
     private Integer stype; ///: 1 pub 1 sub,
     private Long ts; ///:uint32 time sec 1970,
     private String aid; ///: string,

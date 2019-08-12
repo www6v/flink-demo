@@ -49,4 +49,18 @@ package object bean {
     }
   }
 
+
+  case class MonitorRoomBean(
+                          val roomId: String,
+                          val userId: String,
+                          val time:Long) {
+    //    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
+    @BeanProperty
+    val key = s"${roomId}"
+    //    val key = s"${userId}"
+
+    override def toString() = {
+      (key).toString()
+    }
+  }
 }
