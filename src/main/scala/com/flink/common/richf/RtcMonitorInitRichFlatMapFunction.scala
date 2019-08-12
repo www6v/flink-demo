@@ -1,6 +1,7 @@
 package com.flink.common.richf
 
 import com.flink.common.bean.{MonitorRoomBean, MonitorBean}
+import com.flink.common.entry.Constants
 import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.api.common.state.{ValueStateDescriptor, ValueState}
 import org.apache.flink.configuration.Configuration
@@ -14,7 +15,7 @@ class RtcMonitorInitRichFlatMapFunction
 //  private var metric:(String,  String, Long, Integer) = _
 
   override def open(parameters: Configuration): Unit = {
-    val userCountDescriptor = new ValueStateDescriptor[Integer]("userCount", classOf[Integer], 0)
+    val userCountDescriptor = new ValueStateDescriptor[Integer]("userCount", classOf[Integer], 0)  /// 要设置默认值0
     userCount = getRuntimeContext.getState[Integer](userCountDescriptor)
   }
 
@@ -24,19 +25,24 @@ class RtcMonitorInitRichFlatMapFunction
     val roomId: String = value.roomId
     val userId: String = value.userId
     val time: Long = value.time
-//    val time: Long = 111111L
-    println("roomId",roomId)
-    println("userId",userId)
-    println("userAmount",userAmount)
+
+//    println("roomId",roomId)
+//    println("userId",userId)
+//    println("userAmount",userAmount)
 
 //    metric = (roomId, userId, time, userAmount)
     out.collect((roomId, userId, time, userAmount))
 
-    userAmount += 1
+    if ( value.statusType == Constants.STATUS_TYPE_INIT ) {
+      println("roomId-",roomId, "-join")
+      userAmount += 1
+    }
+    if ( value.statusType == Constants.STATUS_TYPE_LEAVE ) {
+      println("roomId-",roomId, "-leave")
+      userAmount -= 1
+    }
     this.userCount.update(userAmount)
   }
-
-
 
 //  override def open(parameters: Configuration): Unit = {
 //    val mapDesc = new MapStateDescriptor[Long,AdlogBean]("StatisticalIndic", classOf[(Long)], classOf[(AdlogBean)] ) /// StatisticalIndic(0)

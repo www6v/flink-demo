@@ -53,6 +53,7 @@ package object bean {
   case class MonitorRoomBean(
                           val roomId: String,
                           val userId: String,
+                          val statusType:Integer,
                           val time:Long) {
     //    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
     @BeanProperty

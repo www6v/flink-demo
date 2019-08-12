@@ -113,14 +113,15 @@ object RtcMonitor {
       }
       else {
 
-        val rtcType: Integer = rtcClinetLog.getType /// 1 通话开始 2 通话状态 3 通话结束
-        if (rtcType == 1) { //  1 通话开始
+        val statusType: Integer = rtcClinetLog.getType /// 1 通话开始 2 通话状态 3 通话结束
+        if (statusType == Constants.STATUS_TYPE_INIT ||
+          statusType == Constants.STATUS_TYPE_LEAVE) { //  1 通话开始
 
           val rid: String = rtcClinetLog.getRid
           val uid: String = rtcClinetLog.getUid
           val time = rtcClinetLog.getTs // 时间
 
-          new MonitorRoomBean(rid, uid, time)
+          new MonitorRoomBean(rid, uid, statusType, time)
         }
         else {
           null
