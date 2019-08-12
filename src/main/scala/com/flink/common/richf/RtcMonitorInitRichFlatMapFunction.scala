@@ -11,13 +11,13 @@ class RtcMonitorInitRichFlatMapFunction
 {
   private var userCount: ValueState[Integer] = _
 
-  private var metric:(String,  String, Long, Integer) = _
+//  private var metric:(String,  String, Long, Integer) = _
 
   override def open(parameters: Configuration): Unit = {
     val userCountDescriptor = new ValueStateDescriptor[Integer]("userCount", classOf[Integer])
     userCount = getRuntimeContext.getState[Integer](userCountDescriptor)
   }
-  
+
   override def flatMap(value: MonitorRoomBean, out: Collector[(String,  String, Long, Integer)]): Unit = {
     val userAmount = userCount.value()
 //    var userAmount = 0
@@ -30,8 +30,8 @@ class RtcMonitorInitRichFlatMapFunction
     println("userId",userId)
     println("userAmount",userAmount)
 
-    metric = (roomId, userId, time, userAmount)
-    out.collect(metric)
+//    metric = (roomId, userId, time, userAmount)
+    out.collect((roomId, userId, time, userAmount))
 
 //    userAmount += 1
     this.userCount.update(userAmount)
