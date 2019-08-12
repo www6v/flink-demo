@@ -18,7 +18,8 @@ class RtcMonitorInitRichFlatMapFunction
 
     val roomId: String = value.roomId
     val userId: String = value.userId
-    val time: Long = value.time
+//    val time: Long = value.time
+    val time: Long = 111111L
 
     metric = (roomId, userId, time, userAmount)
     out.collect(metric)
@@ -28,9 +29,7 @@ class RtcMonitorInitRichFlatMapFunction
   }
 
   override def open(parameters: Configuration): Unit = {
-    // create state descriptor
-    val userCountDescriptor = new ValueStateDescriptor[Integer]("lastTemp", classOf[Integer])
-    // obtain the state handle
+    val userCountDescriptor = new ValueStateDescriptor[Integer]("userCount", classOf[Integer])
     userCount = getRuntimeContext.getState[Integer](userCountDescriptor)
   }
 
