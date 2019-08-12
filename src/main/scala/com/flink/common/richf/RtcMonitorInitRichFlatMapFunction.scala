@@ -8,10 +8,11 @@ import org.apache.flink.configuration.Configuration
 import org.apache.flink.util.Collector;
 
 class RtcMonitorInitRichFlatMapFunction
-  extends RichFlatMapFunction[MonitorRoomBean, (String,  String, Long, Integer,Integer)]
+  extends RichFlatMapFunction[MonitorRoomBean, (String,  String, Long, Integer,Integer,Integer)]
 {
   private var currentUserCount: ValueState[Integer] = _
   private var accumulationUserCount: ValueState[Integer] = _
+  private var peekUserCount: ValueState[Integer] = _
 
 //  private var metric:(String,  String, Long, Integer) = _
 
@@ -21,18 +22,19 @@ class RtcMonitorInitRichFlatMapFunction
 
     val accumulationUserCountDescriptor = new ValueStateDescriptor[Integer]("accumulationUserCount", classOf[Integer], 0)  /// 要设置默认值0
     accumulationUserCount = getRuntimeContext.getState[Integer](accumulationUserCountDescriptor)
+
+    val peekUserCountDescriptor = new ValueStateDescriptor[Integer]("peekUserCount", classOf[Integer], 0)  /// 要设置默认值0
+    peekUserCount = getRuntimeContext.getState[Integer](peekUserCountDescriptor)
   }
 
-  override def flatMap(value: MonitorRoomBean, out: Collector[(String,  String, Long, Integer,Integer)]): Unit = {
+  override def flatMap(value: MonitorRoomBean, out: Collector[(String,  String, Long, Integer,Integer,Integer)]): Unit = {
     var currentUserAmount = currentUserCount.value
-    var accumulationUserAmount = accumulationUserCount.value()
+    var accumulationUserAmount = accumulationUserCount.value
+    var peekUserAmount = peekUserCount.value
 
     val roomId: String = value.roomId
     val userId: String = value.userId
     val time: Long = value.time
-
-//    metric = (roomId, userId, time, currentUserAmount)
-    out.collect((roomId, userId, time, currentUserAmount,accumulationUserAmount ))
 
     if (value.statusType == Constants.STATUS_TYPE_INIT ) {
       println("roomId", roomId , "userId", userId, "join")
@@ -42,9 +44,16 @@ class RtcMonitorInitRichFlatMapFunction
       println("roomId",roomId, "userId", userId, "leave")
       currentUserAmount -= 1
     }
+    if ( currentUserAmount > peekUserAmount ) {
+      peekUserAmount = currentUserAmount
+    }
     accumulationUserAmount += 1
+
+    //    metric = (roomId, userId, time, currentUserAmount)
+    out.collect((roomId, userId, time, currentUserAmount,peekUserAmount ,accumulationUserAmount ))
 
     currentUserCount.update(currentUserAmount)
     accumulationUserCount.update(accumulationUserAmount)
+    peekUserCount.update(peekUserAmount)
   }
 }
