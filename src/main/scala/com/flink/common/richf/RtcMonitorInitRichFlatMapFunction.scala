@@ -45,6 +45,6 @@ class RtcMonitorInitRichFlatMapFunction
     accumulationUserAmount += 1
 
     currentUserCount.update(currentUserAmount)
-    accumulationUserCount.update(currentUserAmount)
+    accumulationUserCount.update(accumulationUserAmount)
   }
 }
