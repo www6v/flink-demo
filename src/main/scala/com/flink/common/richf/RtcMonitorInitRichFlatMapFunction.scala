@@ -36,7 +36,7 @@ class RtcMonitorInitRichFlatMapFunction
     val endTimeOfRoomDescriptor = new ValueStateDescriptor[Long]("endTimeOfRoom", classOf[Long], 0)  /// 要设置默认值0
     endTimeOfRoom = getRuntimeContext.getState[Long](endTimeOfRoomDescriptor)
 
-    val roomStatusDescriptor = new ValueStateDescriptor[Boolean]("endTimeOfRoom", classOf[Boolean], false)  /// 要设置默认值true
+    val roomStatusDescriptor = new ValueStateDescriptor[Boolean]("roomStatus", classOf[Boolean], false)  /// 要设置默认值true
     roomStatus = getRuntimeContext.getState[Boolean](roomStatusDescriptor)
   }
 
