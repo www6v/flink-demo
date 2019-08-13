@@ -115,7 +115,7 @@ object RtcMonitor {
 
         val statusType: Integer = rtcClinetLog.getType /// 1 通话开始 2 通话状态 3 通话结束
         if (statusType == Constants.STATUS_TYPE_INIT ||
-          statusType == Constants.STATUS_TYPE_LEAVE) { //  1 通话开始
+          statusType == Constants.STATUS_TYPE_LEAVE) { //  1 通话开始, 3 通话结束
 
           val rid: String = rtcClinetLog.getRid
           val uid: String = rtcClinetLog.getUid
