@@ -12,4 +12,10 @@
         <!--SELECT * FROM rtc_bill WHERE ID=#{id}-->
     <!--</select>-->
 
+
+    <select id="deleteRoomStatus" parameterType="RoomStatus">
+        DELETE FROM room_status WHERE room_id=#{roomId}
+    </select>
+
+
 </mapper>
