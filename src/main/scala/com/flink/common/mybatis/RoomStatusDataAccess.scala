@@ -19,7 +19,7 @@ object  RoomStatusDataAccess {
     val sqlSession: SqlSession = MybatisUtil.getSqlSession
     val rtcBillMapper: RoomStatusMapper = sqlSession.getMapper(classOf[RoomStatusMapper])
 
-    rtcBillMapper.deleteRoomStatus(roomStatus)
+//    rtcBillMapper.deleteRoomStatus(roomStatus)  /// 不需要delete
     val i: Int = rtcBillMapper.insertRoomStatus(roomStatus)
 
     sqlSession.commit
