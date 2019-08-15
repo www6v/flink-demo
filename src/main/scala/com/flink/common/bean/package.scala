@@ -56,7 +56,7 @@ package object bean {
                           val userId: String,
                           val statusType:Integer,
                           val time:Long,
-                          val data: Data) {
+                          val data:InitData) {
     //    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
     @BeanProperty
     val key = s"${roomId}"

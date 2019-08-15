@@ -36,7 +36,7 @@ object RtcMonitor {
       .map { x => {
         try {
 //          val rtcClinetLog: RtcInitLog = JSON.parseObject(x._2, new TypeReference[RtcInitLog]() {});
-          val rtcClinetLog: RtcParentLog = JSON.parseObject(x._2, new TypeReference[RtcParentLog]() {});
+          val rtcClinetLog: RtcInitOrLeaveLog = JSON.parseObject(x._2, new TypeReference[RtcInitOrLeaveLog]() {});
           handleInitLog(rtcClinetLog)
         } catch {
           case ex: Exception => {
@@ -101,7 +101,7 @@ object RtcMonitor {
     kafkasource
   }
 
-  def handleInitLog(rtcClinetLog: RtcParentLog): MonitorRoomBean = {
+  def handleInitLog(rtcClinetLog: RtcInitOrLeaveLog): MonitorRoomBean = {
 //    if (rtcClinetLog == null ||
 //      rtcClinetLog.getData == null  // leave
 //    ) {
@@ -115,13 +115,15 @@ object RtcMonitor {
             val rid: String = rtcClinetLog.getRid
             val uid: String = rtcClinetLog.getUid
             val time: Long = rtcClinetLog.getTs // 时间
-            var data: Data = null
-            if(statusType == Constants.STATUS_TYPE_INIT){
-              data = rtcClinetLog.asInstanceOf[RtcInitLog].getData
-            }
-            if(statusType == Constants.STATUS_TYPE_LEAVE){
-              data = rtcClinetLog.asInstanceOf[RtcLeaveLog].getData
-            }
+            val data: InitData = rtcClinetLog.getData
+
+//            var data: Data = null
+//            if(statusType == Constants.STATUS_TYPE_INIT){
+//              data = rtcClinetLog.asInstanceOf[RtcInitLog].getData
+//            }
+//            if(statusType == Constants.STATUS_TYPE_LEAVE){
+//              data = rtcClinetLog.asInstanceOf[RtcLeaveLog].getData
+//            }
 
             new MonitorRoomBean(rid, uid, statusType, time, data)
           }

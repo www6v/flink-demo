@@ -76,7 +76,7 @@ class CallInitRichFlatMapFunction
         startTime = value.time
       }
 
-      val d = value.data.asInstanceOf[InitData];
+      val d = value.data;
       sdkv = d.getSdkv
       agent = d.getAgent
       device = d.getDevice
