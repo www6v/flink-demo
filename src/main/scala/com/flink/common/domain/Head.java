@@ -1,22 +1,21 @@
 package com.flink.common.domain;
 
-public class RtcClinetLog {
-
-    private String method; ///: "logup",
-    private String version; ///: 1.0,
-    private String rpc_id; ///: xxxx,
-    private Integer mtype; ///: 1 cam 2 screen,
-    private Integer type; /// log分类 取值 1 2 3, 1 通话开始 2 通话状态 3 通话结束
-    private Integer stype; ///: 1 pub 1 sub,
-    private Long ts; ///:uint32 time sec 1970,
-    private String aid; ///: string,
-    private String rid; ///: string,
-    private String sid; ///: string,
-    private String uid;  ///: string
-
-    private String streamid; ///: string,
-
-   private Data data;
+/**
+ * Created by www6v on 2019/8/15.
+ */
+public class Head {
+    String method; ///: "logup",
+    String version; ///: 1.0,
+    String rpc_id; ///: xxxx,
+    Integer mtype; ///: 1 cam 2 screen,
+    Integer type; /// log分类 取值 1 2 3, 1 通话开始 2 通话状态 3 通话结束
+    Integer stype; ///: 1 pub 1 sub,
+    Long ts; ///:uint32 time sec 1970,
+    String aid; ///: string,
+    String rid; ///: string,
+    String sid; ///: string,
+    String uid;  ///: string
+    String streamid; ///: string,
 
 
     public String getMethod() {
@@ -107,14 +106,6 @@ public class RtcClinetLog {
         this.uid = uid;
     }
 
-    public Data getData() {
-        return data;
-    }
-
-    public void setData(Data data) {
-        this.data = data;
-    }
-
     public String getStreamid() {
         return streamid;
     }
@@ -123,10 +114,3 @@ public class RtcClinetLog {
         this.streamid = streamid;
     }
 }
-
-
-
-
-
-
-

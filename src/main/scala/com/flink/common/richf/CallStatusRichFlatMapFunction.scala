@@ -1,16 +1,16 @@
 package com.flink.common.richf
 
-import com.flink.common.bean.{MonitorBean, AdlogBean}
+import com.flink.common.bean.{MonitorStatusBean, AdlogBean}
 import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.util.Collector;
 
-class RtcMonitorRichFlatMapFunction
-  extends RichFlatMapFunction[MonitorBean, (String, Integer, Long, String, String,String,Integer)]
+class CallStatusRichFlatMapFunction
+  extends RichFlatMapFunction[MonitorStatusBean, (String, Integer, Long, String, String,String,Integer)]
 //    with ListCheckpointed[(String, Long, Long, String, String)]
 {
   private var metric:(String, Integer, Long, String, String,String,Integer) = _
 
-  override def flatMap(value: MonitorBean, out: Collector[(String, Integer, Long, String, String,String,Integer)]): Unit = {
+  override def flatMap(value: MonitorStatusBean, out: Collector[(String, Integer, Long, String, String,String,Integer)]): Unit = {
     val userId: String = value.userId
     val sType: Integer = value.sType
     val time: Long = value.time

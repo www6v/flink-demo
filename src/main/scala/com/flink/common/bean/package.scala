@@ -1,9 +1,10 @@
 package com.flink.common
 
 import scala.beans.BeanProperty
+import com.flink.common.domain.{InitData, Data}
 
 package object bean {
-
+  @Deprecated
   case class AdlogBean(
                         val userId: String,
                         val sType: Integer,
@@ -29,7 +30,7 @@ package object bean {
   }
 
 
-  case class MonitorBean(
+  case class MonitorStatusBean(
                         val roomId: String,
                         val userId: String,
                         val sType: Integer,
@@ -54,7 +55,8 @@ package object bean {
                           val roomId: String,
                           val userId: String,
                           val statusType:Integer,
-                          val time:Long) {
+                          val time:Long,
+                          val data: Data) {
     //    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
     @BeanProperty
     val key = s"${roomId}"

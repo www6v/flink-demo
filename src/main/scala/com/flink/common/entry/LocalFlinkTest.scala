@@ -1,7 +1,7 @@
 package com.flink.common.entry
 
 import com.alibaba.fastjson.{JSONException, TypeReference, JSON}
-import com.flink.common.domain.RtcClinetLog
+import com.flink.common.domain.RtcStatusLog
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
@@ -9,7 +9,7 @@ import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
 import scala.collection.JavaConversions._
 
 import com.flink.common.bean.{AdlogBean, StatisticalIndic}
-import com.flink.common.richf.{RtcMonitorRichFlatMapFunction, AdlogPVRichFlatMapFunction, AdlogPVRichMapFunction}
+import com.flink.common.richf.{CallStatusRichFlatMapFunction, AdlogPVRichFlatMapFunction, AdlogPVRichMapFunction}
 import com.flink.common.sink.{
   HbaseReportSink,
   StateRecoverySinkCheckpointFunc,
@@ -35,7 +35,7 @@ object LocalFlinkTest {
       .filter { x => !x.equals("")  }
       .map { x => {
             try {
-              val rtcClinetLog: RtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
+              val rtcClinetLog: RtcStatusLog = JSON.parseObject(x._2, new TypeReference[RtcStatusLog]() {});
               handleLog(rtcClinetLog)
             }catch {
               case ex: Exception => {println("捕获了异常：" + ex); null}
@@ -59,7 +59,7 @@ object LocalFlinkTest {
     env.execute("rtc-log")
   }
 
-  def handleLog(rtcClinetLog: RtcClinetLog): AdlogBean = {
+  def handleLog(rtcClinetLog: RtcStatusLog): AdlogBean = {
     if (rtcClinetLog == null ||
       rtcClinetLog.getData == null ||
       rtcClinetLog.getData.getVideo == null) {

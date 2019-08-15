@@ -1,14 +1,16 @@
 package com.flink.common.richf
 
-import com.flink.common.bean.{MonitorRoomBean, MonitorBean}
+import com.flink.common.bean.{MonitorRoomBean, MonitorStatusBean}
+import com.flink.common.domain.InitData
 import com.flink.common.entry.Constants
 import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.api.common.state.{ValueStateDescriptor, ValueState}
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.util.Collector;
 
-class RtcMonitorInitRichFlatMapFunction
-  extends RichFlatMapFunction[MonitorRoomBean, (String,  String, Long, Long, Long, Boolean , Integer,Integer,Integer)]
+class CallInitRichFlatMapFunction
+  extends RichFlatMapFunction[MonitorRoomBean, ((String,  String, Long, Long, Long, Boolean , Integer,Integer,Integer),
+    (String,  String, String, String, String, String, String,Integer))]
 {
   private var currentUserCount: ValueState[Integer] = _
   private var accumulationUserCount: ValueState[Integer] = _
@@ -40,7 +42,10 @@ class RtcMonitorInitRichFlatMapFunction
     roomStatus = getRuntimeContext.getState[Boolean](roomStatusDescriptor)
   }
 
-  override def flatMap(value: MonitorRoomBean, out: Collector[(String,  String, Long, Long, Long, Boolean, Integer,Integer,Integer)]): Unit = {
+
+
+  override def flatMap(value: MonitorRoomBean, out: Collector[((String,  String, Long, Long, Long, Boolean, Integer,Integer,Integer),
+    (String,  String, String, String, String, String, String,Integer))]): Unit = {
     var currentUserAmount = currentUserCount.value
     var accumulationUserAmount = accumulationUserCount.value
     var peekUserAmount = peekUserCount.value
@@ -52,6 +57,14 @@ class RtcMonitorInitRichFlatMapFunction
     val userId: String = value.userId
     val time: Long = value.time
 
+    var sdkv:String =null
+    var agent:String =null
+    var device:String =null
+    var system:String =null
+    var network:String =null
+    var cpu:String =null
+    var mem:Integer =null
+
     if (value.statusType == Constants.STATUS_TYPE_INIT) {
       println("roomId", roomId , "userId", userId, "join")
       currentUserAmount += 1
@@ -62,6 +75,15 @@ class RtcMonitorInitRichFlatMapFunction
       if( value.time < startTime  ) {
         startTime = value.time
       }
+
+      val d = value.data.asInstanceOf[InitData];
+      sdkv = d.getSdkv
+      agent = d.getAgent
+      device = d.getDevice
+      system = d.getSystem
+      network = d.getNetwork
+      cpu = d.getCpu
+      mem = d.getMem
     }
     if ( value.statusType == Constants.STATUS_TYPE_LEAVE) {
       println("roomId", roomId, "userId", userId, "leave")
@@ -73,6 +95,14 @@ class RtcMonitorInitRichFlatMapFunction
       if( value.time > endTime  ) {
         endTime = value.time
       }
+
+      sdkv = ""
+      agent = ""
+      device = ""
+      system = ""
+      network = ""
+      cpu = ""
+      mem = 0
     }
     if ( currentUserAmount > peekUserAmount ) {
       peekUserAmount = currentUserAmount
@@ -85,7 +115,9 @@ class RtcMonitorInitRichFlatMapFunction
     }
 
     //    metric = (roomId, userId, time, currentUserAmount)
-    out.collect((roomId, userId, time, startTime, endTime, roomState, currentUserAmount,peekUserAmount ,accumulationUserAmount ))
+    out.collect( ((roomId, userId, time, startTime, endTime, roomState, currentUserAmount,peekUserAmount ,accumulationUserAmount ),
+      (userId, sdkv,agent, device, system, network, cpu, mem ))
+    )
 
     currentUserCount.update(currentUserAmount)
     accumulationUserCount.update(accumulationUserAmount)

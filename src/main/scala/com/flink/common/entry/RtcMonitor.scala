@@ -1,9 +1,9 @@
 package com.flink.common.entry
 
 import com.alibaba.fastjson.{JSON, TypeReference}
-import com.flink.common.bean.{MonitorRoomBean, MonitorBean, AdlogBean, StatisticalIndic}
-import com.flink.common.domain.RtcClinetLog
-import com.flink.common.richf.{RtcMonitorInitRichFlatMapFunction, RtcMonitorRichFlatMapFunction, AdlogPVRichFlatMapFunction}
+import com.flink.common.bean.{MonitorRoomBean, MonitorStatusBean, AdlogBean, StatisticalIndic}
+import com.flink.common.domain._
+import com.flink.common.richf.{CallInitRichFlatMapFunction, CallStatusRichFlatMapFunction, AdlogPVRichFlatMapFunction}
 import com.flink.common.sink.{MonitorInitPrintSink, MonitorPrintSink, SystemPrintSink}
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.scala._
@@ -35,7 +35,8 @@ object RtcMonitor {
       .filter { x => !x.equals("") }
       .map { x => {
         try {
-          val rtcClinetLog: RtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
+//          val rtcClinetLog: RtcInitLog = JSON.parseObject(x._2, new TypeReference[RtcInitLog]() {});
+          val rtcClinetLog: RtcParentLog = JSON.parseObject(x._2, new TypeReference[RtcParentLog]() {});
           handleInitLog(rtcClinetLog)
         } catch {
           case ex: Exception => {
@@ -49,7 +50,7 @@ object RtcMonitor {
         x != null
       }
       .keyBy(_.key) //按key分组，可以把key相同的发往同一个slot处理
-      .flatMap(new RtcMonitorInitRichFlatMapFunction)
+      .flatMap(new CallInitRichFlatMapFunction)
 
     result.setParallelism(1).writeAsText("/home/wei/flink/result/resultInit.txt", WriteMode.OVERWRITE)
 
@@ -66,8 +67,8 @@ object RtcMonitor {
         .filter { x => !x.equals("") }
         .map { x => {
           try {
-            val rtcClinetLog: RtcClinetLog = JSON.parseObject(x._2, new TypeReference[RtcClinetLog]() {});
-            handleLog(rtcClinetLog)
+            val rtcClinetLog: RtcStatusLog = JSON.parseObject(x._2, new TypeReference[RtcStatusLog]() {});
+            handleStatusLog(rtcClinetLog)
           } catch {
             case ex: Exception => {
               println("捕获了异常：" + ex);
@@ -80,7 +81,7 @@ object RtcMonitor {
           x != null
         }
         .keyBy(_.key) //按key分组，可以把key相同的发往同一个slot处理
-        .flatMap(new RtcMonitorRichFlatMapFunction)
+        .flatMap(new CallStatusRichFlatMapFunction)
 
     result.setParallelism(1).writeAsText("/home/wei/flink/result/result.txt", WriteMode.OVERWRITE)
 
@@ -100,37 +101,38 @@ object RtcMonitor {
     kafkasource
   }
 
-  def handleInitLog(rtcClinetLog: RtcClinetLog): MonitorRoomBean = {
-    if (rtcClinetLog == null ||
-      rtcClinetLog.getData == null ||
-      rtcClinetLog.getData.getVideo == null) {
-      null
-    }
-    else {
-      if (rtcClinetLog.getData.getVideo.getBr == null ||
-        rtcClinetLog.getData.getVideo.getLostpre == null) {
-        null
-      }
-      else {
+  def handleInitLog(rtcClinetLog: RtcParentLog): MonitorRoomBean = {
+//    if (rtcClinetLog == null ||
+//      rtcClinetLog.getData == null  // leave
+//    ) {
+//      null
+//    }
+//    else {
+          val statusType: Integer = rtcClinetLog.getType /// 1 通话开始 2 通话状态 3 通话结束
+          if (statusType == Constants.STATUS_TYPE_INIT ||
+            statusType == Constants.STATUS_TYPE_LEAVE) {         //  1 通话开始, 3 通话结束
 
-        val statusType: Integer = rtcClinetLog.getType /// 1 通话开始 2 通话状态 3 通话结束
-        if (statusType == Constants.STATUS_TYPE_INIT ||
-          statusType == Constants.STATUS_TYPE_LEAVE) { //  1 通话开始, 3 通话结束
+            val rid: String = rtcClinetLog.getRid
+            val uid: String = rtcClinetLog.getUid
+            val time: Long = rtcClinetLog.getTs // 时间
+            var data: Data = null
+            if(statusType == Constants.STATUS_TYPE_INIT){
+              data = rtcClinetLog.asInstanceOf[RtcInitLog].getData
+            }
+            if(statusType == Constants.STATUS_TYPE_LEAVE){
+              data = rtcClinetLog.asInstanceOf[RtcLeaveLog].getData
+            }
 
-          val rid: String = rtcClinetLog.getRid
-          val uid: String = rtcClinetLog.getUid
-          val time = rtcClinetLog.getTs // 时间
+            new MonitorRoomBean(rid, uid, statusType, time, data)
+          }
+          else {
+            null
+          }
 
-          new MonitorRoomBean(rid, uid, statusType, time)
-        }
-        else {
-          null
-        }
-      }
-    }
+//    }
   }
 
-  def handleLog(rtcClinetLog: RtcClinetLog): MonitorBean = {
+  def handleStatusLog(rtcClinetLog: RtcStatusLog): MonitorStatusBean = {
     if (rtcClinetLog == null ||
       rtcClinetLog.getData == null ||
       rtcClinetLog.getData.getVideo == null) {
@@ -164,7 +166,7 @@ object RtcMonitor {
           val lostPre = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre) /// 丢包率
           val frt = String.valueOf(rtcClinetLog.getData.getVideo.getFrt) /// 发送的帧率
 
-          new MonitorBean(rid, uid, sType,
+          new MonitorStatusBean(rid, uid, sType,
             br, lostPre, frt,
             delay, time, StatisticalIndic(1))
         }
