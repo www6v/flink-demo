@@ -4,11 +4,12 @@ import com.flink.common.mybatis.RoomStatusDataAccess
 import org.apache.flink.streaming.api.functions.sink.SinkFunction
 
 class MonitorInitPrintSink extends SinkFunction[((String,  String,Long, Long, Long, Boolean, Integer,Integer,Integer),
-  (String,  String, String, String, String, String, String,Integer))] {
+  (String,String, Integer, Long, String, String, String, String, String, String,Integer))] {
   override def invoke(value: ((String,  String, Long, Long, Long, Boolean, Integer,Integer,Integer),
-    (String,  String, String, String, String, String, String,Integer))): Unit = {
+    (String, String, Integer, Long, String, String, String, String, String, String,Integer))): Unit = {
 
-    RoomStatusDataAccess.insertDB( value._1 )
+    RoomStatusDataAccess.insertDB(value._1)
+    RoomStatusDataAccess.insertUserDB(value._2)
     println("MonitorInitPrintSink",value)
   }
 }

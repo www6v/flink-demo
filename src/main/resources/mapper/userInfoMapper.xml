@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flink.common.mybatis.UserInfoMapper">
+
+    <!--<insert id="insertRoomStatus" parameterType="RoomStatus">-->
+       <!--insert into room_status(room_id, user_id, time, start_time, end_time, room_state, current_user_amount, peek_user_amount, accumulation_user_amount)-->
+        <!--values (#{roomId}, #{userId}, #{time}, #{startTime}, #{endTime}, #{roomState}, #{currentUserAmount}, #{peekUserAmount}, #{accumulationUserAmount})-->
+        <!--ON DUPLICATE KEY UPDATE room_id=#{roomId},user_id=#{userId}, time=#{time} , start_time=#{startTime}, end_time=#{endTime}, room_state=#{roomState}, current_user_amount=#{currentUserAmount}, peek_user_amount=#{peekUserAmount}, accumulation_user_amount=#{accumulationUserAmount}-->
+    <!--</insert>-->
+
+
+    <insert id="insertUserInfo" parameterType="UserInfo">
+        insert into  user_info(user_id, room_id, status_type ,time , sdkv, agent, device,  system, network, cpu, mem)
+        values (#{userId}, #{roomId}, #{statusType}, #{time}, #{sdkv}, #{agent}, #{device}, #{system}, #{network}, #{cpu}, #{mem})
+        ON DUPLICATE KEY UPDATE user_id=#{userId},room_id=#{roomId}, status_type=#{statusType} , time=#{time}, sdkv=#{sdkv}, agent=#{agent}, device=#{device}, system=#{system}, network=#{network}, cpu=#{cpu}, mem=#{mem}
+    </insert>
+
+</mapper>

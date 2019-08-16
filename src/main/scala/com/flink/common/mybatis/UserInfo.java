@@ -1,6 +1,12 @@
-package com.flink.common.domain;
+package com.flink.common.mybatis;
 
-public class InitData extends Data {
+public class UserInfo {
+    private Integer id;
+    private String userId;
+    private String roomId;
+    private Integer statusType;
+    private Long time;
+
     private String  sdkv;  /// sdk 版本号
     private String agent;/// sdk 类型
     private String device;/// 设备类型类型
@@ -9,6 +15,21 @@ public class InitData extends Data {
     private String cpu;/// cpu 描述
     private Integer mem;/// 内存大小
 
+    public Integer getStatusType() {
+        return statusType;
+    }
+
+    public void setStatusType(Integer statusType) {
+        this.statusType = statusType;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
 
     public String getSdkv() {
         return sdkv;
@@ -64,5 +85,30 @@ public class InitData extends Data {
 
     public void setMem(Integer mem) {
         this.mem = mem;
+    }
+
+
+
+    public String getRoomId() {
+        return roomId;
+    }
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

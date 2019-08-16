@@ -25,6 +25,7 @@
     </environments>
 
     <mappers>
-        <mapper resource="mapper/mapper.xml"/>
+        <mapper resource="mapper/roomStatusMapper.xml"/>
+        <mapper resource="mapper/userInfoMapper.xml" />
     </mappers>
 </configuration>

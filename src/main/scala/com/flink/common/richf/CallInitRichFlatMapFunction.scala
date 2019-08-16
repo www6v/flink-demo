@@ -10,7 +10,7 @@ import org.apache.flink.util.Collector;
 
 class CallInitRichFlatMapFunction
   extends RichFlatMapFunction[MonitorRoomBean, ((String,  String, Long, Long, Long, Boolean , Integer,Integer,Integer),
-    (String,  String, String, String, String, String, String,Integer))]
+    (String,String, Integer, Long,  String, String, String, String, String, String,Integer))]
 {
   private var currentUserCount: ValueState[Integer] = _
   private var accumulationUserCount: ValueState[Integer] = _
@@ -44,8 +44,8 @@ class CallInitRichFlatMapFunction
 
 
 
-  override def flatMap(value: MonitorRoomBean, out: Collector[((String,  String, Long, Long, Long, Boolean, Integer,Integer,Integer),
-    (String,  String, String, String, String, String, String,Integer))]): Unit = {
+  override def flatMap(value: MonitorRoomBean, out: Collector[((String, String, Long, Long, Long, Boolean, Integer,Integer,Integer),
+    (String,String, Integer, Long, String, String, String, String, String, String,Integer))]): Unit = {
     var currentUserAmount = currentUserCount.value
     var accumulationUserAmount = accumulationUserCount.value
     var peekUserAmount = peekUserCount.value
@@ -56,6 +56,7 @@ class CallInitRichFlatMapFunction
     val roomId: String = value.roomId
     val userId: String = value.userId
     val time: Long = value.time
+    val statusType: Integer = value.statusType
 
     var sdkv:String =null
     var agent:String =null
@@ -65,7 +66,7 @@ class CallInitRichFlatMapFunction
     var cpu:String =null
     var mem:Integer =null
 
-    if (value.statusType == Constants.STATUS_TYPE_INIT) {
+    if (statusType == Constants.STATUS_TYPE_INIT) {
       println("roomId", roomId , "userId", userId, "join")
       currentUserAmount += 1
 
@@ -85,7 +86,7 @@ class CallInitRichFlatMapFunction
       cpu = d.getCpu
       mem = d.getMem
     }
-    if ( value.statusType == Constants.STATUS_TYPE_LEAVE) {
+    if ( statusType == Constants.STATUS_TYPE_LEAVE) {
       println("roomId", roomId, "userId", userId, "leave")
       currentUserAmount -= 1
 
@@ -116,7 +117,7 @@ class CallInitRichFlatMapFunction
 
     //    metric = (roomId, userId, time, currentUserAmount)
     out.collect( ((roomId, userId, time, startTime, endTime, roomState, currentUserAmount,peekUserAmount ,accumulationUserAmount ),
-      (userId, sdkv,agent, device, system, network, cpu, mem ))
+      (userId, roomId, statusType, time, sdkv, agent, device, system, network, cpu, mem))
     )
 
     currentUserCount.update(currentUserAmount)
