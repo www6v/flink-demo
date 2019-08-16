@@ -8,6 +8,7 @@
     <typeAliases>
         <!--<typeAlias type="ucloud.utrc.bill.mybatis.RtcBillEntity" alias="RtcBillEntity"/>-->
         <typeAlias type="com.flink.common.mybatis.RoomStatus" alias="RoomStatus"/>
+        <typeAlias type="com.flink.common.mybatis.UserInfo" alias="UserInfo"/>
     </typeAliases>
 
     <environments default="development">
