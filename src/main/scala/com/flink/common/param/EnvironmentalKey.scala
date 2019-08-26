@@ -10,6 +10,6 @@ trait EnvironmentalKey {
 
 //  val TOPIC = "flink-kafka-1"
 //  val TOPIC = "flink-rtc-log"
-//  val TOPIC = "flink-rtc-log-2" // fluentd
-  val TOPIC = "flink-rtc-log-3"  /// myself
+  val TOPIC = "flink-rtc-log-2" // fluentd
+//  val TOPIC = "flink-rtc-log-3"  /// myself
 }
