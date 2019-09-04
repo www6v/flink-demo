@@ -32,7 +32,7 @@ object RtcMonitor {
     //    val env = getFlinkEnv(cp, 60000) // 1 min
     val result = env
       .addSource(kafkasource)
-      .filter { x => !x.equals("") }
+//      .filter { x => !x.equals("") }  /// fix
       .map { x => {
         try {
 //          val rtcClinetLog: RtcInitLog = JSON.parseObject(x._2, new TypeReference[RtcInitLog]() {});
