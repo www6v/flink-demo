@@ -24,7 +24,7 @@ object LocalFlinkTest {
   def main(args: Array[String]): Unit = {
     println("rtc log  ")
     val kafkasource = new FlinkKafkaConsumer08[(String, String)](
-      TOPIC.split(",").toList,
+      TOPIC_INIT_LEAVE.split(",").toList,
       new TopicMessageDeserialize(),
       getKafkaParam(BROKER))
     kafkasource.setCommitOffsetsOnCheckpoints(true)
