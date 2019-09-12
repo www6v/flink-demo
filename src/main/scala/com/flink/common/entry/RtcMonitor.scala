@@ -18,14 +18,14 @@ object RtcMonitor {
   def main(args: Array[String]): Unit = {
     println("rtc log  ")
 
-    val kafkaSource: FlinkKafkaConsumer08[(String, String)] = getKafkaSource
-    val kafkaSource1: FlinkKafkaConsumer08[(String, String)] = getKafkaSource1
+    val kafkaSourceJoinLeave: FlinkKafkaConsumer08[(String, String)] = getKafkaSourceJoinLeave
+    val kafkaProcess: FlinkKafkaConsumer08[(String, String)] = getKafkaSourceProcess
 
 
     val env = getFlinkEnv(cp, 60000) // 1 min
 
-    handleCallInitStats(env,kafkaSource)
-    handleCallStats(env,kafkaSource1)
+    handleCallInitStats(env,kafkaSourceJoinLeave)
+    handleCallStats(env,kafkaProcess)
 
     env.execute("rtc-log")
 //    env1.execute("rtc-log-1")
@@ -94,9 +94,9 @@ object RtcMonitor {
 //    env
   }
 
-  def getKafkaSource: FlinkKafkaConsumer08[(String, String)] = {
+  def getKafkaSourceJoinLeave: FlinkKafkaConsumer08[(String, String)] = {
     val kafkasource = new FlinkKafkaConsumer08[(String, String)](
-      TOPIC_INIT_LEAVE.split(",").toList,
+      TOPIC_JOIN_LEAVE.split(",").toList,
       new TopicMessageDeserialize(),
       getKafkaParam(BROKER))
     kafkasource.setCommitOffsetsOnCheckpoints(true)
@@ -104,9 +104,9 @@ object RtcMonitor {
     kafkasource
   }
 
-  def getKafkaSource1: FlinkKafkaConsumer08[(String, String)] = {
+  def getKafkaSourceProcess: FlinkKafkaConsumer08[(String, String)] = {
     val kafkasource = new FlinkKafkaConsumer08[(String, String)](
-      TOPIC_INIT_LEAVE.split(",").toList,
+      TOPIC_JOIN_LEAVE.split(",").toList,
       new TopicMessageDeserialize(),
       getKafkaParam(BROKER))
     kafkasource.setCommitOffsetsOnCheckpoints(true)

@@ -14,6 +14,6 @@ trait EnvironmentalKey {
 
 //  val TOPIC = "flink-kafka-1"
 //  val TOPIC = "flink-rtc-log"
-  val TOPIC_INIT_LEAVE = "flink-rtc-log-2" // fluentd
-  val TOPIC_Process = "flink-rtc-log-3"  /// fluentd
+  val TOPIC_Process = "flink-rtc-log-process" // fluentd
+  val TOPIC_JOIN_LEAVE  = "flink-rtc-log-join-leave"  /// fluentd
 }
