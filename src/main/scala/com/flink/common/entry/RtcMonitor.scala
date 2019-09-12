@@ -19,10 +19,13 @@ object RtcMonitor {
     println("rtc log  ")
 
     val kafkaSource: FlinkKafkaConsumer08[(String, String)] = getKafkaSource
+    val kafkaSource1: FlinkKafkaConsumer08[(String, String)] = getKafkaSource1
+
 
     val env = getFlinkEnv(cp, 60000) // 1 min
+
     handleCallInitStats(env,kafkaSource)
-//    handleCallStats(env,kafkaSource)
+    handleCallStats(env,kafkaSource1)
 
     env.execute("rtc-log")
 //    env1.execute("rtc-log-1")
@@ -93,7 +96,17 @@ object RtcMonitor {
 
   def getKafkaSource: FlinkKafkaConsumer08[(String, String)] = {
     val kafkasource = new FlinkKafkaConsumer08[(String, String)](
-      TOPIC.split(",").toList,
+      TOPIC_INIT_LEAVE.split(",").toList,
+      new TopicMessageDeserialize(),
+      getKafkaParam(BROKER))
+    kafkasource.setCommitOffsetsOnCheckpoints(true)
+    kafkasource.setStartFromLatest() //不加这个默认是从上次消费
+    kafkasource
+  }
+
+  def getKafkaSource1: FlinkKafkaConsumer08[(String, String)] = {
+    val kafkasource = new FlinkKafkaConsumer08[(String, String)](
+      TOPIC_INIT_LEAVE.split(",").toList,
       new TopicMessageDeserialize(),
       getKafkaParam(BROKER))
     kafkasource.setCommitOffsetsOnCheckpoints(true)
