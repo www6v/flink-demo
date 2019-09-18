@@ -24,7 +24,7 @@ object RtcMonitor {
 
     val env = getFlinkEnv(cp, 60000) // 1 min
 
-    handleCallInitStats(env,kafkaSourceJoinLeave)
+//    handleCallInitStats(env,kafkaSourceJoinLeave)
     handleCallStats(env,kafkaProcess)
 
     env.execute("rtc-log")
@@ -106,7 +106,7 @@ object RtcMonitor {
 
   def getKafkaSourceProcess: FlinkKafkaConsumer08[(String, String)] = {
     val kafkasource = new FlinkKafkaConsumer08[(String, String)](
-      TOPIC_JOIN_LEAVE.split(",").toList,
+      TOPIC_Process.split(",").toList,
       new TopicMessageDeserialize(),
       getKafkaParam(BROKER))
     kafkasource.setCommitOffsetsOnCheckpoints(true)
