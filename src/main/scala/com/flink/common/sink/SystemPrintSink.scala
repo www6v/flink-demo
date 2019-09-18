@@ -59,29 +59,29 @@ import org.apache.flink.configuration.Configuration
   }
 
   override def open( parameters:Configuration) {
-//
-////    "prometheus-gateway.app.pre.urome.cn"
-//     prometheusPush = new PushGateway(  PUSH_GATAWAY )
-//
-//     gaugeBr  = Gauge.build.name("biteRateOfTheUser").
-//      labelNames("userid" ).
-////       labelNames("userid", "lostPre","frt","delay" ).
-//      help("rtc monitor").register
-//
-//    gaugeLostPre = Gauge.build.name("lostPreOfTheUser").
-////      labelNames("userid", "br", "frt", "delay").
-//      labelNames("userid").
-//      help("rtc monitor").register
-//
-//    gaugeFrt  = Gauge.build.name("frtOfTheUser").
-////      labelNames("userid", "br","lostPre","delay" ).
-//      labelNames("userid" ).
-//      help("rtc monitor").register
-//
-//    gaugeDelay  = Gauge.build.name("delayOfTheUser").
-////      labelNames("userid", "br", "lostPre", "frt").
-//      labelNames("userid").
-//      help("rtc monitor").register
+
+//    "prometheus-gateway.app.pre.urome.cn"
+     prometheusPush = new PushGateway(  PUSH_GATAWAY )
+
+     gaugeBr  = Gauge.build.name("biteRateOfTheUser").
+      labelNames("userid" ).
+//       labelNames("userid", "lostPre","frt","delay" ).
+      help("rtc monitor").register
+
+    gaugeLostPre = Gauge.build.name("lostPreOfTheUser").
+//      labelNames("userid", "br", "frt", "delay").
+      labelNames("userid").
+      help("rtc monitor").register
+
+    gaugeFrt  = Gauge.build.name("frtOfTheUser").
+//      labelNames("userid", "br","lostPre","delay" ).
+      labelNames("userid" ).
+      help("rtc monitor").register
+
+    gaugeDelay  = Gauge.build.name("delayOfTheUser").
+//      labelNames("userid", "br", "lostPre", "frt").
+      labelNames("userid").
+      help("rtc monitor").register
   }
 
   override def close(): Unit = {
