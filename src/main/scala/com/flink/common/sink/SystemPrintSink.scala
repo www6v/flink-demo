@@ -1,6 +1,7 @@
 package com.flink.common.sink
 
 import com.flink.common.bean.{AdlogBean, StatisticalIndic}
+import com.flink.common.entry._
 import io.prometheus.client.Gauge
 import io.prometheus.client.exporter.PushGateway
 import org.apache.flink.streaming.api.functions.sink.{
@@ -59,7 +60,8 @@ import org.apache.flink.configuration.Configuration
 
   override def open( parameters:Configuration) {
 
-     prometheusPush = new PushGateway("prometheus-gateway.app.pre.urome.cn")
+//    "prometheus-gateway.app.pre.urome.cn"
+     prometheusPush = new PushGateway(  PUSH_GATAWAY )
 
      gaugeBr  = Gauge.build.name("biteRateOfTheUser").
       labelNames("userid" ).

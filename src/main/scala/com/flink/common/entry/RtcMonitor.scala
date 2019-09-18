@@ -4,12 +4,13 @@ import com.alibaba.fastjson.{JSON, TypeReference}
 import com.flink.common.bean.{MonitorRoomBean, MonitorStatusBean, AdlogBean, StatisticalIndic}
 import com.flink.common.domain._
 import com.flink.common.richf.{CallInitRichFlatMapFunction, CallStatusRichFlatMapFunction, AdlogPVRichFlatMapFunction}
-import com.flink.common.sink.{MonitorInitPrintSink, MonitorPrintSink, SystemPrintSink}
+import com.flink.common.sink.{SystemPrintSink, MonitorInitPrintSink, MonitorPrintSink}
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
 
 import scala.collection.JavaConversions._
+
 
 object RtcMonitor {
 //  val cp = "file:///C:\\Users\\Master\\Desktop\\rocksdbcheckpoint"
@@ -88,7 +89,7 @@ object RtcMonitor {
 
     result.setParallelism(1).writeAsText("/home/wei/flink/result/result.txt", WriteMode.OVERWRITE)
 
-    result.addSink(new MonitorPrintSink)
+    result.addSink(new SystemPrintSink) // new MonitorPrintSink
     //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
     //    result.addSink(new HbaseReportSink)
 //    env
