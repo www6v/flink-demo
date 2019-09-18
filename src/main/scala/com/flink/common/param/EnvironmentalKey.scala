@@ -18,5 +18,7 @@ trait EnvironmentalKey {
   val TOPIC_JOIN_LEAVE  = "flink-rtc-log-join-leave"  /// fluentd
 
 //  val PUSH_GATAWAY = "prometheus-gateway.sh.internal.pre.urtc.com.cn"  //
-  val PUSH_GATAWAY = "prometheus-gateway.sh.internal.prod.urtc.com.cn"  //
+//  val PUSH_GATAWAY = "prometheus-gateway.sh.internal.prod.urtc.com.cn"  //
+  val PUSH_GATAWAY = "prometheus-gateway.sh.prod.urtc.com.cn"
+
 }
