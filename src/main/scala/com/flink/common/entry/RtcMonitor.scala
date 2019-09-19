@@ -22,10 +22,9 @@ object RtcMonitor {
     val kafkaSourceJoinLeave: FlinkKafkaConsumer08[(String, String)] = getKafkaSourceJoinLeave
     val kafkaProcess: FlinkKafkaConsumer08[(String, String)] = getKafkaSourceProcess
 
-
     val env = getFlinkEnv(cp, 60000) // 1 min
 
-//    handleCallInitStats(env,kafkaSourceJoinLeave)
+    handleCallInitStats(env,kafkaSourceJoinLeave)
     handleCallStats(env,kafkaProcess)
 
     env.execute("rtc-log")
@@ -36,7 +35,9 @@ object RtcMonitor {
     //    val env = getFlinkEnv(cp, 60000) // 1 min
     val result = env
       .addSource(kafkasource)
-//      .filter { x => !x.equals("") }  /// fix
+      .filter { x => !x.equals("") }
+      .filter { x => !x._2.contains("ios") }  /// ios
+      .filter { x => !x._2.contains("iphone") }  /// iphone
       .map { x => {
         try {
 //          val rtcClinetLog: RtcInitLog = JSON.parseObject(x._2, new TypeReference[RtcInitLog]() {});
@@ -69,6 +70,8 @@ object RtcMonitor {
     val result = env
         .addSource(kafkasource)
         .filter { x => !x.equals("") }
+        .filter { x => !x._2.contains("ios") }  /// ios
+        .filter { x => !x._2.contains("iphone") }  /// iphone
         .map { x => {
           try {
             val rtcClinetLog: RtcStatusLog = JSON.parseObject(x._2, new TypeReference[RtcStatusLog]() {});
