@@ -53,7 +53,7 @@ object LocalFlinkTest {
 
     //operate state
 //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
-    result.addSink(new SystemPrintSink)
+//    result.addSink(new SystemPrintSink)
 //    result.addSink(new HbaseReportSink)
 
     env.execute("rtc-log")
