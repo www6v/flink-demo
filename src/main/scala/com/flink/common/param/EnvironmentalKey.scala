@@ -20,7 +20,7 @@ trait EnvironmentalKey {
 
 //  val PUSH_GATAWAY = "prometheus-gateway.sh.internal.pre.urtc.com.cn"  //
   val PUSH_GATAWAY = "prometheus-gateway.sh.pre.urtc.com.cn"  //
-  
+
 //  val PUSH_GATAWAY = "prometheus-gateway.sh.internal.prod.urtc.com.cn"  //
 //  val PUSH_GATAWAY = "prometheus-gateway.sh.prod.urtc.com.cn"
 
