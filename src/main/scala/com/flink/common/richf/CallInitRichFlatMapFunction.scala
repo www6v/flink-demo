@@ -77,6 +77,8 @@ class CallInitRichFlatMapFunction
         startTime = value.time
       }
 
+      endTime = 0 // 清空endTime
+
       val d = value.data;
       sdkv = d.getSdkv
       agent = d.getAgent
@@ -85,6 +87,8 @@ class CallInitRichFlatMapFunction
       network = d.getNetwork
       cpu = d.getCpu
       mem = d.getMem
+
+      accumulationUserAmount += 1
     }
     if ( statusType == Constants.STATUS_TYPE_LEAVE) {
       println("roomId", roomId, "userId", userId, "leave")
@@ -105,10 +109,10 @@ class CallInitRichFlatMapFunction
       cpu = ""
       mem = 0
     }
+
     if ( currentUserAmount > peekUserAmount ) {
       peekUserAmount = currentUserAmount
     }
-    accumulationUserAmount += 1
     if (currentUserAmount != 0) {  /// 还有用户， 房间不空
       roomState = true
     }else {
