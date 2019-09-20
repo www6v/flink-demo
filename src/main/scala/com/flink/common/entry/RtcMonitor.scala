@@ -80,10 +80,11 @@ object RtcMonitor {
           val substring: String = body.substring(index, index + 10)
           //        System.out.println(substring);
           if (substring.contains("android") || substring.contains("ios") || substring.contains("win")) {
-            return true
+             true
           }
-
-          return false
+          else {
+            false
+          }
         }}
         .filter { x => !x._2.contains("ios") }  /// ios
         .filter { x => !x._2.contains("iphone") }  /// iphone
