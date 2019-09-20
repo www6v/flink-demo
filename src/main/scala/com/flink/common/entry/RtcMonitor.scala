@@ -70,6 +70,21 @@ object RtcMonitor {
     val result = env
         .addSource(kafkasource)
         .filter { x => !x.equals("") }
+        .filter {  x => {
+          val body = x._2
+          val i: Int = body.indexOf("rpc_id")
+          val length: Int = "rpc_id\":\"".length
+
+          val index: Int = i + length
+
+          val substring: String = body.substring(index, index + 10)
+          //        System.out.println(substring);
+          if (substring.contains("android") || substring.contains("ios") || substring.contains("win")) {
+            return true
+          }
+
+          return false
+        }}
         .filter { x => !x._2.contains("ios") }  /// ios
         .filter { x => !x._2.contains("iphone") }  /// iphone
         .map { x => {
