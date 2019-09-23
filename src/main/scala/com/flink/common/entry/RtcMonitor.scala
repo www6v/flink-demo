@@ -108,7 +108,7 @@ object RtcMonitor {
 
     result.setParallelism(1).writeAsText("/home/wei/flink/result/result.txt", WriteMode.OVERWRITE)
 
-    result.addSink(new SystemPrintSink) // new MonitorPrintSink
+    result.addSink(new SystemPrintSink).setParallelism(1) // new MonitorPrintSink
     //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
     //    result.addSink(new HbaseReportSink)
 //    env
