@@ -9,6 +9,7 @@
         <!--<typeAlias type="ucloud.utrc.bill.mybatis.RtcBillEntity" alias="RtcBillEntity"/>-->
         <typeAlias type="com.flink.common.mybatis.entity.RoomStatus" alias="RoomStatus"/>
         <typeAlias type="com.flink.common.mybatis.entity.UserInfo" alias="UserInfo"/>
+        <typeAlias type="com.flink.common.mybatis.entity.Operation" alias="Operation"/>
     </typeAliases>
 
     <environments default="development">
@@ -32,5 +33,6 @@
     <mappers>
         <mapper resource="mapper/roomStatusMapper.xml"/>
         <mapper resource="mapper/userInfoMapper.xml" />
+        <mapper resource="mapper/operationMapper.xml" />
     </mappers>
 </configuration>
