@@ -1,11 +1,13 @@
 package com.flink.common.entry
 
 import com.alibaba.fastjson.{JSON, TypeReference}
-import com.flink.common.bean.{MonitorRoomBean, MonitorStatusBean, AdlogBean, StatisticalIndic}
-import com.flink.common.domain._
-import com.flink.common.richf.{CallInitRichFlatMapFunction, CallStatusRichFlatMapFunction, AdlogPVRichFlatMapFunction}
-import com.flink.common.sink.{SystemPrintSink, MonitorInitPrintSink, MonitorPrintSink}
-import org.apache.flink.core.fs.FileSystem.WriteMode
+import com.flink.common.bean._
+import com.flink.common.domain.joinLeave.{InitData, RtcInitOrLeaveLog}
+import com.flink.common.domain.operation.{OpertionData, OpertionLog}
+import com.flink.common.domain.status.RtcStatusLog
+import com.flink.common.richf.{CallOperationRichFlatMapFunction, CallInitRichFlatMapFunction, CallStatusRichFlatMapFunction}
+import com.flink.common.sink.{OperationSink, StatusPrometheusSink, JoinLeaveDBSink, MonitorPrintSink}
+
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
 
@@ -16,22 +18,56 @@ object RtcMonitor {
 //  val cp = "file:///C:\\Users\\Master\\Desktop\\rocksdbcheckpoint"
   val cp = "/home/wei/flink/rocksdbcheckpoint"
 
+
+
+  def handleOperation(env: StreamExecutionEnvironment, kafkaOperation: FlinkKafkaConsumer08[(String, String)]) = {
+    //    val env = getFlinkEnv(cp, 60000) // 1 min
+    val result = env
+      .addSource(kafkaOperation)
+      .filter { x => !x.equals("") }
+      .filter { x => !x._2.contains("ios") }  /// ios
+      .filter { x => !x._2.contains("iphone") }  /// iphone
+      .map { x => {
+        try {
+            val opertionLog: OpertionLog = JSON.parseObject(x._2, new TypeReference[OpertionLog]() {});
+            handleOpertionLog(opertionLog)
+        } catch {
+              case ex: Exception => {
+                println("捕获了异常：" + ex);
+                null
+              }
+            }
+        }
+      }
+      .filter { x =>
+        x != null
+      }
+      .keyBy(_.key)
+      .flatMap(new CallOperationRichFlatMapFunction)
+
+//    result.setParallelism(1).writeAsText("/home/wei/flink/result/resultInit.txt", WriteMode.OVERWRITE)
+
+    result.addSink(new OperationSink)
+  }
+
   def main(args: Array[String]): Unit = {
-    println("rtc log  ")
+    println("rtc log")
 
     val kafkaSourceJoinLeave: FlinkKafkaConsumer08[(String, String)] = getKafkaSourceJoinLeave
     val kafkaProcess: FlinkKafkaConsumer08[(String, String)] = getKafkaSourceProcess
+    val kafkaOperation: FlinkKafkaConsumer08[(String, String)] = getKafkaSourceOperation
 
     val env = getFlinkEnv(cp, 60000) // 1 min
 
-    handleCallInitStats(env,kafkaSourceJoinLeave)
-    handleCallStats(env,kafkaProcess)
+    handleJoinLeave(env,kafkaSourceJoinLeave)
+    handleStatus(env,kafkaProcess)
+    handleOperation(env,kafkaOperation)
 
     env.execute("rtc-log")
 //    env1.execute("rtc-log-1")
   }
 
-  def handleCallInitStats(env:StreamExecutionEnvironment,kafkasource: FlinkKafkaConsumer08[(String, String)]): Unit = {
+  def handleJoinLeave(env:StreamExecutionEnvironment, kafkasource: FlinkKafkaConsumer08[(String, String)]): Unit = {
     //    val env = getFlinkEnv(cp, 60000) // 1 min
     val result = env
       .addSource(kafkasource)
@@ -57,15 +93,15 @@ object RtcMonitor {
       .keyBy(_.key) //按key分组，可以把key相同的发往同一个slot处理
       .flatMap(new CallInitRichFlatMapFunction)
 
-    result.setParallelism(1).writeAsText("/home/wei/flink/result/resultInit.txt", WriteMode.OVERWRITE)
+//    result.setParallelism(1).writeAsText("/home/wei/flink/result/resultInit.txt", WriteMode.OVERWRITE)
 
-    result.addSink(new MonitorInitPrintSink)
+    result.addSink(new JoinLeaveDBSink)
     //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
     //    result.addSink(new HbaseReportSink)
     //    env
   }
 
-  def handleCallStats(env:StreamExecutionEnvironment,kafkasource: FlinkKafkaConsumer08[(String, String)]): Unit = {
+  def handleStatus(env:StreamExecutionEnvironment, kafkasource: FlinkKafkaConsumer08[(String, String)]): Unit = {
 //    val env = getFlinkEnv(cp, 60000) // 1 min
     val result = env
         .addSource(kafkasource)
@@ -106,9 +142,9 @@ object RtcMonitor {
         .keyBy(_.key) //按key分组，可以把key相同的发往同一个slot处理
         .flatMap(new CallStatusRichFlatMapFunction)
 
-    result.setParallelism(1).writeAsText("/home/wei/flink/result/result.txt", WriteMode.OVERWRITE)
+//    result.setParallelism(1).writeAsText("/home/wei/flink/result/result.txt", WriteMode.OVERWRITE)
 
-    result.addSink(new SystemPrintSink).setParallelism(1) // new MonitorPrintSink
+    result.addSink(new StatusPrometheusSink).setParallelism(1) // new MonitorPrintSink
     //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
     //    result.addSink(new HbaseReportSink)
 //    env
@@ -132,6 +168,32 @@ object RtcMonitor {
     kafkasource.setCommitOffsetsOnCheckpoints(true)
     kafkasource.setStartFromLatest() //不加这个默认是从上次消费
     kafkasource
+  }
+
+  def getKafkaSourceOperation: FlinkKafkaConsumer08[(String, String)] = {
+    val kafkasource = new FlinkKafkaConsumer08[(String, String)](
+      TOPIC_OPERATION.split(",").toList,
+      new TopicMessageDeserialize(),
+      getKafkaParam(BROKER))
+    kafkasource.setCommitOffsetsOnCheckpoints(true)
+    kafkasource.setStartFromLatest() //不加这个默认是从上次消费
+    kafkasource
+  }
+
+  def handleOpertionLog(rtcOpertionLog: OpertionLog): MonitorOpertionBean = {
+    val statusType: Integer = rtcOpertionLog.getType
+    if (statusType == Constants.STATUS_TYPE_OPERATION) {
+
+      val rid: String = rtcOpertionLog.getRid
+      val uid: String = rtcOpertionLog.getUid
+      val time: Long = rtcOpertionLog.getTs // 时间
+      val data: OpertionData = rtcOpertionLog.getData
+
+      new MonitorOpertionBean(rid, uid, statusType, time, data)
+    }
+    else {
+      null
+    }
   }
 
   def handleInitLog(rtcClinetLog: RtcInitOrLeaveLog): MonitorRoomBean = {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.flink.common.mybatis.UserInfoMapper">
+<mapper namespace="com.flink.common.mybatis.mapper.UserInfoMapper">
 
     <!--<insert id="insertRoomStatus" parameterType="RoomStatus">-->
        <!--insert into room_status(room_id, user_id, time, start_time, end_time, room_state, current_user_amount, peek_user_amount, accumulation_user_amount)-->

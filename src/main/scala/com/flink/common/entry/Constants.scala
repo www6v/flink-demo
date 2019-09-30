@@ -6,4 +6,5 @@ package com.flink.common.entry
 object Constants {
   val STATUS_TYPE_INIT = 1
   val STATUS_TYPE_LEAVE = 3
+  val STATUS_TYPE_OPERATION = 5
 }

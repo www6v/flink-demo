@@ -16,6 +16,8 @@ trait EnvironmentalKey {
 //  val TOPIC = "flink-rtc-log"
   val TOPIC_Process = "flink-rtc-log-process" // fluentd
   val TOPIC_JOIN_LEAVE  = "flink-rtc-log-join-leave"  /// fluentd
+  val TOPIC_OPERATION  = "flink-rtc-log-operation"  /// fluentd
+  val TOPIC_EXCEPTION  = "flink-rtc-log-exception"  /// fluentd
 
 
   val PUSH_GATAWAY = "prometheus-gateway.sh.internal.pre.urtc.com.cn"  //
@@ -23,5 +25,4 @@ trait EnvironmentalKey {
 
 //  val PUSH_GATAWAY = "prometheus-gateway.sh.internal.prod.urtc.com.cn"  //
 //  val PUSH_GATAWAY = "prometheus-gateway.sh.prod.urtc.com.cn"
-
 }

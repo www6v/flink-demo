@@ -1,7 +1,7 @@
 package com.flink.common.richf
 
 import com.flink.common.bean.{MonitorRoomBean, MonitorStatusBean}
-import com.flink.common.domain.InitData
+import com.flink.common.domain.joinLeave.InitData
 import com.flink.common.entry.Constants
 import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.api.common.state.{ValueStateDescriptor, ValueState}

@@ -1,7 +1,7 @@
 package com.flink.common.entry
 
 import com.alibaba.fastjson.{JSONException, TypeReference, JSON}
-import com.flink.common.domain.RtcStatusLog
+import com.flink.common.domain.status.RtcStatusLog
 import org.apache.flink.core.fs.FileSystem.WriteMode
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
@@ -13,10 +13,11 @@ import com.flink.common.richf.{CallStatusRichFlatMapFunction, AdlogPVRichFlatMap
 import com.flink.common.sink.{
   HbaseReportSink,
   StateRecoverySinkCheckpointFunc,
-  SystemPrintSink
+  StatusPrometheusSink
 }
 import com.flink.common.bean.AdlogBean
 
+@Deprecated
 object LocalFlinkTest {
 //  val cp = "file:///C:\\Users\\Master\\Desktop\\rocksdbcheckpoint"
   val cp = "/home/wei/flink/rocksdbcheckpoint"

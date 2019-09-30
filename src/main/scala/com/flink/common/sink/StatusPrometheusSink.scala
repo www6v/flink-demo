@@ -11,7 +11,7 @@ import org.apache.flink.streaming.api.functions.sink.{
 import org.apache.flink.configuration.Configuration
 
 //class SystemPrintSink extends SinkFunction[AdlogBean] {
-  class SystemPrintSink extends RichSinkFunction[(String, Integer, Long, String, String,String,Integer)] {
+  class StatusPrometheusSink extends RichSinkFunction[(String, Integer, Long, String, String,String,Integer)] {
 //class SystemPrintSink extends SinkFunction[(String, Long, Long, String, String)] {
 
 
