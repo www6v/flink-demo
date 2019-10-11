@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flink.common.mybatis.mapper.ExceptionMapper">
+
+    <insert id="insertException" parameterType="ExceptionPO">
+       insert into user_exception(room_id,	user_id, status_type, time, exception_type)
+        values (#{roomId}, #{userId}, #{statusType}, #{time}, #{exceptionType})
+    </insert>
+
+</mapper>

@@ -1,6 +1,7 @@
 package com.flink.common
 
 import com.flink.common.domain.common.Data
+import com.flink.common.domain.exception.ExceptionData
 import com.flink.common.domain.joinLeave.InitData
 import com.flink.common.domain.operation.OpertionData
 
@@ -76,7 +77,21 @@ package object bean {
                               val statusType:Integer,
                               val time:Long,
                               val data:OpertionData) {
-    //    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
+    @BeanProperty
+    val key = s"${roomId}"
+    //    val key = s"${userId}"
+
+    override def toString() = {
+      (key).toString()
+    }
+  }
+
+  case class MonitorExceptionBean(
+                                  val roomId: String,
+                                  val userId: String,
+                                  val statusType:Integer,
+                                  val time:Long,
+                                  val data:ExceptionData) {
     @BeanProperty
     val key = s"${roomId}"
     //    val key = s"${userId}"
