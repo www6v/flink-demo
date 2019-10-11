@@ -317,7 +317,7 @@ object RtcMonitor   {
 
   def handleExceptionLog(exceptionLog: ExceptionLog): MonitorExceptionBean = {
     val statusType: Integer = exceptionLog.getType
-    if (statusType == Constants.STATUS_TYPE_OPERATION) {
+    if (statusType == Constants.STATUS_TYPE_EXCEPTION) {
 
       val rid: String = exceptionLog.getRid
       val uid: String = exceptionLog.getUid
