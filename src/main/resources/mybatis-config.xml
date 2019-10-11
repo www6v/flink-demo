@@ -10,6 +10,7 @@
         <typeAlias type="com.flink.common.mybatis.entity.RoomStatus" alias="RoomStatus"/>
         <typeAlias type="com.flink.common.mybatis.entity.UserInfo" alias="UserInfo"/>
         <typeAlias type="com.flink.common.mybatis.entity.Operation" alias="Operation"/>
+        <typeAlias type="com.flink.common.mybatis.entity.ExceptionPO" alias="ExceptionPO"/>
     </typeAliases>
 
     <environments default="development">
