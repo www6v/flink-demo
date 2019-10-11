@@ -11,6 +11,7 @@ import com.flink.common.sink._
 
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
+import org.slf4j.{LoggerFactory, Logger}
 
 import scala.collection.JavaConversions._
 
@@ -161,6 +162,7 @@ object RtcMonitor   {
       .map { x => {
       try {
         val exceptionLog: ExceptionLog = JSON.parseObject(x._2, new TypeReference[ExceptionLog]() {});
+        println("map:exceptionLog:" + exceptionLog)
         handleExceptionLog(exceptionLog)
       } catch {
         case ex: Exception => {
@@ -321,6 +323,11 @@ object RtcMonitor   {
       val uid: String = exceptionLog.getUid
       val time: Long = exceptionLog.getTs // 时间
       val data: ExceptionData = exceptionLog.getData
+
+      println("handleExceptionLog: " + rid)
+      println("handleExceptionLog: " + uid)
+      println("handleExceptionLog: " + time)
+      println("handleExceptionLog: " + data)
 
       new MonitorExceptionBean(rid, uid, statusType, time, data)
     }

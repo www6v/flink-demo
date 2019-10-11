@@ -17,6 +17,12 @@ class CallExceptionRichFlatMapFunction
     val time: Long = value.time
     val errorType: Integer = value.data.getErrorType;
 
+    println("flatMap:" + roomId)
+    println("flatMap:" + userId)
+    println("flatMap:" + statusType)
+    println("flatMap:" + time)
+    println("flatMap:" + errorType)
+
     metric = (roomId, userId, statusType, time, errorType)
 
     out.collect(metric)
