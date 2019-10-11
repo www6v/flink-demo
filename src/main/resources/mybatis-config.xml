@@ -34,5 +34,6 @@
         <mapper resource="mapper/roomStatusMapper.xml"/>
         <mapper resource="mapper/userInfoMapper.xml" />
         <mapper resource="mapper/operationMapper.xml" />
+        <mapper resource="mapper/exceptionMapper.xml" />
     </mappers>
 </configuration>
