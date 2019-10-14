@@ -3,6 +3,8 @@ package com.flink.common.domain.joinLeave;
 import com.flink.common.domain.common.Data;
 
 public class InitData extends Data {
+    private String  region;  /// 區域
+
     private String  sdkv;  /// sdk 版本号
     private String agent;/// sdk 类型
     private String device;/// 设备类型类型
@@ -66,5 +68,13 @@ public class InitData extends Data {
 
     public void setMem(Integer mem) {
         this.mem = mem;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }

@@ -1,24 +1,29 @@
 package com.flink.common.richf
 
-import com.flink.common.bean.{MonitorOpertionBean, MonitorStatusBean}
-import com.flink.common.domain.operation.OpertionData
+import com.flink.common.bean.{MonitorExceptionBean, MonitorOpertionBean}
 import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.util.Collector;
 
-class CallOperationRichFlatMapFunction
-  extends RichFlatMapFunction[MonitorOpertionBean, (String, String, Integer, Long, Integer)]
+class ExceptionRichFlatMapFunction
+  extends RichFlatMapFunction[MonitorExceptionBean, (String, String, Integer, Long, Integer)]
 //    with ListCheckpointed[(String, Long, Long, String, String)]
 {
   private var metric:(String, String, Integer, Long, Integer) = _
 
-  override def flatMap(value: MonitorOpertionBean, out: Collector[(String, String, Integer, Long, Integer)]): Unit = {
+  override def flatMap(value: MonitorExceptionBean, out: Collector[(String, String, Integer, Long, Integer)]): Unit = {
     val roomId: String = value.roomId;
     val userId: String = value.userId
     val statusType: Integer =value.statusType
     val time: Long = value.time
-    val opertionType: Integer = value.data.getOpertionType;
+    val errorType: Integer = value.data.getErrorType;
 
-    metric = (roomId, userId, statusType, time, opertionType)
+    println("flatMap:" + roomId)
+    println("flatMap:" + userId)
+    println("flatMap:" + statusType)
+    println("flatMap:" + time)
+    println("flatMap:" + errorType)
+
+    metric = (roomId, userId, statusType, time, errorType)
 
     out.collect(metric)
   }

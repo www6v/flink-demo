@@ -9,7 +9,7 @@ import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer08
 import scala.collection.JavaConversions._
 
 import com.flink.common.bean.{AdlogBean, StatisticalIndic}
-import com.flink.common.richf.{CallStatusRichFlatMapFunction, AdlogPVRichFlatMapFunction, AdlogPVRichMapFunction}
+import com.flink.common.richf.{StatusRichFlatMapFunction, AdlogPVRichFlatMapFunction, AdlogPVRichMapFunction}
 import com.flink.common.sink.{
   HbaseReportSink,
   StateRecoverySinkCheckpointFunc,

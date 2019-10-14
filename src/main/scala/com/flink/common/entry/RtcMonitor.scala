@@ -6,7 +6,7 @@ import com.flink.common.domain.exception.{ExceptionData, ExceptionLog}
 import com.flink.common.domain.joinLeave.{InitData, RtcInitOrLeaveLog}
 import com.flink.common.domain.operation.{OpertionData, OpertionLog}
 import com.flink.common.domain.status.RtcStatusLog
-import com.flink.common.richf.{CallExceptionRichFlatMapFunction, CallOperationRichFlatMapFunction, CallInitRichFlatMapFunction, CallStatusRichFlatMapFunction}
+import com.flink.common.richf.{ExceptionRichFlatMapFunction, OperationRichFlatMapFunction, InitRichFlatMapFunction, StatusRichFlatMapFunction}
 import com.flink.common.sink._
 
 import org.apache.flink.streaming.api.scala._
@@ -63,7 +63,7 @@ object RtcMonitor   {
         x != null
       }
       .keyBy(_.key) //按key分组，可以把key相同的发往同一个slot处理
-      .flatMap(new CallInitRichFlatMapFunction)
+      .flatMap(new InitRichFlatMapFunction)
 
     //    result.setParallelism(1).writeAsText("/home/wei/flink/result/resultInit.txt", WriteMode.OVERWRITE)
 
@@ -112,9 +112,7 @@ object RtcMonitor   {
         x != null
       }
       .keyBy(_.key) //按key分组，可以把key相同的发往同一个slot处理
-      .flatMap(new CallStatusRichFlatMapFunction)
-
-    //    result.setParallelism(1).writeAsText("/home/wei/flink/result/result.txt", WriteMode.OVERWRITE)
+      .flatMap(new StatusRichFlatMapFunction)
 
     result.addSink(new StatusPrometheusSink).setParallelism(1) // new MonitorPrintSink
     //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
@@ -145,7 +143,7 @@ object RtcMonitor   {
         x != null
       }
       .keyBy(_.key)
-      .flatMap(new CallOperationRichFlatMapFunction)
+      .flatMap(new OperationRichFlatMapFunction)
 
     //    result.setParallelism(1).writeAsText("/home/wei/flink/result/resultInit.txt", WriteMode.OVERWRITE)
 
@@ -175,7 +173,7 @@ object RtcMonitor   {
         x != null
       }
       .keyBy(_.key)
-      .flatMap(new CallExceptionRichFlatMapFunction)
+      .flatMap(new ExceptionRichFlatMapFunction)
 
     result.addSink(new ExceptionSink)
   }
@@ -253,6 +251,8 @@ object RtcMonitor   {
     //    }
   }
 
+
+
   def handleStatusLog(rtcClinetLog: RtcStatusLog): MonitorStatusBean = {
     if (rtcClinetLog == null ||
       rtcClinetLog.getData == null ||
@@ -267,17 +267,16 @@ object RtcMonitor   {
       else {
 
         val rtcType: Integer = rtcClinetLog.getType /// 1 通话开始 2 通话状态 3 通话结束
-        if (rtcType == 2) {
+        if (rtcType == Constants.STATUS_TYPE_STATUS) {
           val uid: String = rtcClinetLog.getUid
           val rid: String = rtcClinetLog.getRid
           val sType = rtcClinetLog.getStype /// 流类别 1 发布流 2 订阅流
 
           var delay: Integer = -1
-          if (sType.equals(1)) {
-            /// 1 发布流
+          if (sType.equals(Constants.STREAM_PUB)) {
             delay = rtcClinetLog.getData.getRtt
           }
-          if (sType.equals(2)) {
+          if (sType.equals(Constants.STREAM_SUB)) {
             delay = rtcClinetLog.getData.getDelay
           }
 

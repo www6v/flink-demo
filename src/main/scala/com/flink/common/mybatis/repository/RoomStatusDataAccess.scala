@@ -29,7 +29,7 @@ object  RoomStatusDataAccess {
     sqlSession.close
   }
 
-  def insertUserDB(value: (String,String, Integer, Long, String, String, String, String, String, String,Integer)): Unit = {
+  def insertUserDB(value: (String,String, Integer, Long, String, String, String, String, String, String,Integer, String)): Unit = {
     val userInfo: UserInfo = new UserInfo
     userInfo.setUserId(value._1)
     userInfo.setRoomId(value._2)
@@ -43,6 +43,7 @@ object  RoomStatusDataAccess {
     userInfo.setNetwork(value._9)
     userInfo.setCpu(value._10)
     userInfo.setMem(value._11)
+    userInfo.setRegion(value._12)
 
     val sqlSession: SqlSession = MybatisUtil.getSqlSession
     val userInfoMapper: UserInfoMapper = sqlSession.getMapper(classOf[UserInfoMapper])

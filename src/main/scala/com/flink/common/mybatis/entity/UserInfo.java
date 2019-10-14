@@ -15,6 +15,8 @@ public class UserInfo {
     private String cpu;/// cpu 描述
     private Integer mem;/// 内存大小
 
+    private String region;
+
     public Integer getStatusType() {
         return statusType;
     }
@@ -110,5 +112,12 @@ public class UserInfo {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+    public void setRegion(String region) {
+        this.region = region;
     }
 }
