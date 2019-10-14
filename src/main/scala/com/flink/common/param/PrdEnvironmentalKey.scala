@@ -16,6 +16,8 @@ trait PrdEnvironmentalKey {
   val TOPIC_OPERATION  = "flink-rtc-log-operation"  /// fluentd
   val TOPIC_EXCEPTION  = "flink-rtc-log-exception"  /// fluentd
 
-  val PUSH_GATAWAY = "prometheus-gateway.sh.internal.prod.urtc.com.cn"  //
+//  val PUSH_GATAWAY = "prometheus-gateway.sh.internal.prod.urtc.com.cn"  //
+  val PUSH_GATAWAY = "prometheus-pushgateway.kube-system.svc.cluster.local:9091"  //
+
 //  val PUSH_GATAWAY = "prometheus-gateway.sh.prod.urtc.com.cn"
 }
