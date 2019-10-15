@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flink.common.mybatis.mapper.UserDetailMapper">
+
+    <insert id="insertUserDetail" parameterType="UserDetail">
+        insert into  user_detail(user_id, room_id, status_type ,time, sdkv, agent, device,  system, network, cpu, mem, region)
+        values (#{userId}, #{roomId}, #{statusType}, #{time}, #{sdkv}, #{agent}, #{device}, #{system}, #{network}, #{cpu}, #{mem}, #{region})
+    </insert>
+
+
+    <!--<insert id="insertUserInfo" parameterType="UserInfo">-->
+    <!--insert into  user_info(user_id, room_id, status_type ,time , sdkv, agent, device,  system, network, cpu, mem, region)-->
+    <!--values (#{userId}, #{roomId}, #{statusType}, #{time}, #{sdkv}, #{agent}, #{device}, #{system}, #{network}, #{cpu}, #{mem}, #{region})-->
+    <!--ON DUPLICATE KEY UPDATE user_id=#{userId},room_id=#{roomId}, status_type=#{statusType} , time=#{time}, sdkv=#{sdkv}, agent=#{agent}, device=#{device}, system=#{system}, network=#{network}, cpu=#{cpu}, mem=#{mem}, region=#{region}-->
+    <!--</insert>-->
+
+</mapper>

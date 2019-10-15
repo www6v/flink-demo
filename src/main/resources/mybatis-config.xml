@@ -11,6 +11,7 @@
         <typeAlias type="com.flink.common.mybatis.entity.UserInfo" alias="UserInfo"/>
         <typeAlias type="com.flink.common.mybatis.entity.Operation" alias="Operation"/>
         <typeAlias type="com.flink.common.mybatis.entity.ExceptionPO" alias="ExceptionPO"/>
+        <typeAlias type="com.flink.common.mybatis.entity.UserDetail" alias="UserDetail"/>
     </typeAliases>
 
     <environments default="development">
@@ -36,5 +37,6 @@
         <mapper resource="mapper/userInfoMapper.xml" />
         <mapper resource="mapper/operationMapper.xml" />
         <mapper resource="mapper/exceptionMapper.xml" />
+        <mapper resource="mapper/userDetailMapper.xml" />
     </mappers>
 </configuration>

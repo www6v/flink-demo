@@ -9,7 +9,9 @@ class JoinLeaveDBSink extends SinkFunction[((String,  String,Long, Long, Long, B
     (String, String, Integer, Long, String, String, String, String, String, String,Integer, String))): Unit = {
 
     RoomStatusDataAccess.insertDB(value._1)
-    RoomStatusDataAccess.insertUserDB(value._2)
+    RoomStatusDataAccess.insertUserInfoDB(value._2)
+    RoomStatusDataAccess.insertUserDetailDB(value._2)
+
     println("MonitorInitPrintSink",value)
   }
 }
