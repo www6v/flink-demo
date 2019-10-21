@@ -74,6 +74,8 @@ def insertFalcon(ts: StatusMetric): Unit = {
     //    val gson: Gson = new Gson
     val gson = new GsonBuilder().disableHtmlEscaping().create();
     val s = gson.toJson(ts)
+    print("s" + s)
+    print("------")
     //      val s = JSON.toJSONString(ts)
     val formEntity: HttpEntity[String] = new HttpEntity[String](s, headers)
     //    val body: String = restTemplate.postForEntity("http://10.25.27.40:1988/v1/push", formEntity, classOf[String]).getBody
