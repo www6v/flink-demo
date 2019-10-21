@@ -10,7 +10,7 @@
 
 
     <!--<insert id="insertUserInfo" parameterType="UserInfo">-->
-    <!--insert into  user_info(user_id, room_id, status_type ,time , sdkv, agent, device,  system, network, cpu, mem, region)-->
+    <!--insert into  user_time(user_id, room_id, status_type ,time , sdkv, agent, device,  system, network, cpu, mem, region)-->
     <!--values (#{userId}, #{roomId}, #{statusType}, #{time}, #{sdkv}, #{agent}, #{device}, #{system}, #{network}, #{cpu}, #{mem}, #{region})-->
     <!--ON DUPLICATE KEY UPDATE user_id=#{userId},room_id=#{roomId}, status_type=#{statusType} , time=#{time}, sdkv=#{sdkv}, agent=#{agent}, device=#{device}, system=#{system}, network=#{network}, cpu=#{cpu}, mem=#{mem}, region=#{region}-->
     <!--</insert>-->
