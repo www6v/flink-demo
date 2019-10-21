@@ -10,6 +10,8 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.web.client.RestTemplate
 
+import java.util
+
 class StatusOpenFalconSink extends RichSinkFunction[(String, Integer, Long, String, String,String,Integer,
     String,String,Integer,String,String,String)] {
 
@@ -56,14 +58,15 @@ class StatusOpenFalconSink extends RichSinkFunction[(String, Integer, Long, Stri
     statusMetric.setCounterType("GAUGE")
     statusMetric.setTags(tags)
 
-    insertFalcon(statusMetric)
+    val ts: java.util.List[StatusMetric] = new java.util.ArrayList[StatusMetric]
+    ts.add(statusMetric)
+    insertFalcon(ts)
   }
-
 
   val OPENFALCON_URL="http://172.16.177.172:1988/v1/push"
 
-//  def insertFalcon(ts: util.List[StatusMetric]): Unit = {
-def insertFalcon(ts: StatusMetric): Unit = {
+  def insertFalcon(ts: util.List[StatusMetric]): Unit = {
+//def insertFalcon(ts: StatusMetric): Unit = {
     val restTemplate: RestTemplate = new RestTemplate
     val headers: HttpHeaders = new HttpHeaders
     val contentType: MediaType = MediaType.parseMediaType("application/json; charset=UTF-8")
