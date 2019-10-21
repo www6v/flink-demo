@@ -11,7 +11,8 @@ import org.apache.flink.streaming.api.functions.sink.{
 import org.apache.flink.configuration.Configuration
 
 //class SystemPrintSink extends SinkFunction[AdlogBean] {
-  class StatusPrometheusSink extends RichSinkFunction[(String, Integer, Long, String, String,String,Integer)] {
+  class StatusPrometheusSink extends RichSinkFunction[(String, Integer, Long, String, String,String,Integer,
+  String,String,Integer,String,String,String)] {
 //class SystemPrintSink extends SinkFunction[(String, Long, Long, String, String)] {
 
 
@@ -22,7 +23,8 @@ import org.apache.flink.configuration.Configuration
   var gaugeDelay: Gauge = _
 
 
-  override def invoke(value:(String, Integer, Long, String, String,String,Integer)): Unit = {
+  override def invoke(value:(String, Integer, Long, String, String,String,Integer,
+    String,String,Integer,String,String,String)): Unit = {
 //  override def invoke(value: AdlogBean): Unit = {
 //    println("SystemPrintSink",value)
 

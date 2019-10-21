@@ -115,6 +115,7 @@ object RtcMonitor   {
       .flatMap(new StatusRichFlatMapFunction)
 
     result.addSink(new StatusPrometheusSink).setParallelism(1) // new MonitorPrintSink
+    result.addSink(new StatusOpenFalconSink).setParallelism(1)
     //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
     //    result.addSink(new HbaseReportSink)
     //    env
@@ -282,13 +283,23 @@ object RtcMonitor   {
 
           val time = rtcClinetLog.getTs // 时间
 
+          ///
+          val aid:String = rtcClinetLog.getAid;
+          val mType:Integer = rtcClinetLog.getMtype;
+          val rpc_id:String = rtcClinetLog.getRpc_id
+          val sid:String = rtcClinetLog.getSid
+          val streamid:String = rtcClinetLog.getStreamid
+          ///
+
           val br = String.valueOf(rtcClinetLog.getData.getVideo.getBr) /// 码率
           val lostPre = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre) /// 丢包率
           val frt = String.valueOf(rtcClinetLog.getData.getVideo.getFrt) /// 发送的帧率
 
           new MonitorStatusBean(rid, uid, sType,
             br, lostPre, frt,
-            delay, time, StatisticalIndic(1))
+            delay, time,
+            aid, mType, rpc_id,sid,streamid
+          )
         }
         else {
           null

@@ -5,12 +5,15 @@ import org.apache.flink.api.common.functions.RichFlatMapFunction
 import org.apache.flink.util.Collector;
 
 class StatusRichFlatMapFunction
-  extends RichFlatMapFunction[MonitorStatusBean, (String, Integer, Long, String, String,String,Integer)]
+  extends RichFlatMapFunction[MonitorStatusBean, (String, Integer, Long, String, String,String,Integer,
+    String,String,Integer,String,String,String)]
 //    with ListCheckpointed[(String, Long, Long, String, String)]
 {
-  private var metric:(String, Integer, Long, String, String,String,Integer) = _
+  private var metric:(String, Integer, Long, String, String,String,Integer,
+    String,String,Integer,String,String,String) = _
 
-  override def flatMap(value: MonitorStatusBean, out: Collector[(String, Integer, Long, String, String,String,Integer)]): Unit = {
+  override def flatMap(value: MonitorStatusBean, out: Collector[(String, Integer, Long, String, String,String,Integer,
+    String,String,Integer,String,String,String)]): Unit = {
     val userId: String = value.userId
     val sType: Integer = value.sType
     val time: Long = value.time
@@ -19,7 +22,15 @@ class StatusRichFlatMapFunction
     val frt : String = value.frt
     val delay: Integer = value.delay
 
-    metric = (userId, sType, time, br, lostPre, frt, delay)
+    val aid:String = value.aid
+    val roomId:String = value.roomId
+    val mType:Integer = value.mType
+    val  rpc_id:String = value.rpc_id
+    val sid:String = value.sid
+    val streamid:String = value.streamid
+
+    metric = (userId, sType, time, br, lostPre, frt, delay,
+              aid, roomId, mType, rpc_id, sid, streamid)
     out.collect(metric)
   }
 

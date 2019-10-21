@@ -43,15 +43,23 @@ package object bean {
                         val frt : String,
                         val delay: Integer,
                         val time:Long,
-                        var pv: StatisticalIndic) {
+
+                        val aid:String,
+                        val mType:Integer,
+                        val  rpc_id:String,
+                        val sid:String,
+                        val streamid:String
+//                        var pv: StatisticalIndic
+                              ) {
     //    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
+    //    val key = s"${userId}"
     @BeanProperty
     val key = s"${roomId}"
-    //    val key = s"${userId}"
 
     override def toString() = {
-      (key, pv).toString()
+      (key).toString()
     }
+    //      (key, pv).toString()
   }
 
 
