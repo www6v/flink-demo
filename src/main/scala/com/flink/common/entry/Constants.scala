@@ -17,7 +17,6 @@ object Constants {
   val LOST_PRE_AUDIO: String = "lostPreAudio"
   val VOLUME_AUDIO: String = "volumeAudio"
 
-    val OPENFALCON_URL = "http://172.16.177.172:1988/v1/push"  /// pre
-//  val OPENFALCON_URL = "http://172.16.236.74:1988/v1/push"   /// prd
-
+//    val OPENFALCON_URL = "http://172.16.177.172:1988/v1/push"  /// pre
+  val OPENFALCON_URL = "http://172.16.236.74:1988/v1/push"   /// prd
 }
