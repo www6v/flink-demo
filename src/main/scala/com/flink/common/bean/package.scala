@@ -63,6 +63,36 @@ package object bean {
   }
 
 
+  case class MonitorAudioStatusBean(
+                                val roomId: String,
+                                val userId: String,
+                                val sType: Integer,
+
+                                val br: String,
+                                val lostPre: String,
+                                val volume: String,
+//                                val frt : String,
+//                                val delay: Integer,
+
+                                val time:Long,
+                                val aid:String,
+                                val mType:Integer,
+                                val  rpc_id:String,
+                                val sid:String,
+                                val streamid:String
+                                //                        var pv: StatisticalIndic
+                              ) {
+    //    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
+    //    val key = s"${userId}"
+    @BeanProperty
+    val key = s"${roomId}"
+
+    override def toString() = {
+      (key).toString()
+    }
+    //      (key, pv).toString()
+  }
+
   case class MonitorRoomBean(
                           val roomId: String,
                           val userId: String,
