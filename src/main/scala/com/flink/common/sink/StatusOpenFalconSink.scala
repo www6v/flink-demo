@@ -25,9 +25,13 @@ class StatusOpenFalconSink extends RichSinkFunction[(String, Integer, Long, Stri
 
     val tsBiteRate: util.List[StatusMetric] = biteRateMetric(value)
     val tsLostPre: util.List[StatusMetric] = lostPreMetric(value)
+    val tsFrt: util.List[StatusMetric] = frtMetric(value)
+    val tsDelay: util.List[StatusMetric] = delayMetric(value)
 
     insertFalcon(tsBiteRate)
     insertFalcon(tsLostPre)
+    insertFalcon(tsFrt)
+    insertFalcon(tsDelay)
   }
 
   def biteRateMetric(value: (String, Integer, Long, String, String, String, Integer, String, String, Integer, String, String, String)): util.List[StatusMetric] = {
