@@ -15,58 +15,124 @@ import java.util
 class StatusOpenFalconSink extends RichSinkFunction[(String, Integer, Long, String, String,String,Integer,
     String,String,Integer,String,String,String)] {
 
+  val BITE_RATE: String = "biteRate"
+  val LOST_PRE: String = "lostPre"
+  val FRT: String = "frt"
+  val DELAY: String = "delay"
+
   override def invoke(value:(String, Integer, Long, String, String,String,Integer,
     String,String,Integer,String,String,String)): Unit = {
 
-    val userId = value._1;
-    val sType = value._2  // 1: 发布流，2: 订阅流
-    val time = value._3;
+    val tsBiteRate: util.List[StatusMetric] = biteRateMetric(value)
+    val tsLostPre: util.List[StatusMetric] = lostPreMetric(value)
 
-//    val br = value._4.toDouble;
-//    val lostPre = value._5.toDouble;
-//    val frt = value._6.toDouble;
-//    val delay = value._7.toDouble;
+    insertFalcon(tsBiteRate)
+    insertFalcon(tsLostPre)
+  }
+
+  def biteRateMetric(value: (String, Integer, Long, String, String, String, Integer, String, String, Integer, String, String, String)): util.List[StatusMetric] = {
+    val (userId: String, sType: Integer, time: Long,
+    appId: String, roomId: String, mType: Integer, rpc_id: String, streamId: String,
+    brStr: String, lostPreStr: String,frtStr: String, delayStr: String) = retriveParam(value)
+
+    val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId)
+
+    val ts: util.List[StatusMetric] = fillMetric(BITE_RATE, brStr, time,  appId, tags)
+
+    ts
+  }
+
+  def lostPreMetric(value: (String, Integer, Long, String, String, String, Integer, String, String, Integer, String, String, String)): util.List[StatusMetric] = {
+    val (userId: String, sType: Integer, time: Long,
+    appId: String, roomId: String, mType: Integer, rpc_id: String, streamId: String,
+    brStr: String, lostPreStr: String,frtStr: String, delayStr: String) = retriveParam(value);
+
+    val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId)
+
+    val ts: util.List[StatusMetric] = fillMetric(LOST_PRE, lostPreStr, time,  appId, tags)
+
+    ts
+  }
+
+  def frtMetric(value: (String, Integer, Long, String, String, String, Integer, String, String, Integer, String, String, String)): util.List[StatusMetric] = {
+    val (userId: String, sType: Integer, time: Long,
+    appId: String, roomId: String, mType: Integer, rpc_id: String, streamId: String,
+    brStr: String, lostPreStr: String,frtStr: String, delayStr: String) = retriveParam(value);
+
+    val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId)
+
+    val ts: util.List[StatusMetric] = fillMetric(FRT, frtStr, time,  appId, tags)
+
+    ts
+  }
+
+
+  def delayMetric(value: (String, Integer, Long, String, String, String, Integer, String, String, Integer, String, String, String)): util.List[StatusMetric] = {
+    val (userId: String, sType: Integer, time: Long,
+    appId: String, roomId: String, mType: Integer, rpc_id: String, streamId: String,
+    brStr: String, lostPreStr: String,frtStr: String, delayStr: String) = retriveParam(value)
+
+    val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId)
+
+    val ts: util.List[StatusMetric] = fillMetric(DELAY, delayStr, time,  appId, tags)
+
+    ts
+  }
+
+
+  def retriveParam(value: (String, Integer, Long, String, String, String, Integer, String, String, Integer, String, String, String)):
+  (String, Integer, Long,  String, String, Integer, String, String,
+    String, String,String,String) = {
+    val userId = value._1;
+    val sType = value._2 // 1: 发布流，2: 订阅流
+    val time = value._3;
 
     val brStr = value._4
     val lostPreStr = value._5
     val frtStr = value._6
     val delayStr = value._7.toString
 
+    val appId: String = value._8
+    val roomId: String = value._9
+    val mType: Integer = value._10
+    val rpc_id: String = value._11
+    //    val sid: String = value._12
+    val streamId: String = value._13
 
-    val appId:String = value._8
-    val roomId:String = value._9
-    val mType:Integer = value._10
-    val  rpc_id:String = value._11
-    val sid:String = value._12
-    val streamId:String = value._13
+    (userId, sType, time,  appId, roomId, mType, rpc_id, streamId,
+      brStr,lostPreStr,frtStr, delayStr)
+  }
 
-    val tags = "userId=" + userId + "," +
-                "roomId=" + roomId + "," +
-                "streamId=" + streamId + "," +
-                "stype=" + sType + "," +
-                "mType=" +  mType + "," +
-                "rpc_id=" + rpc_id + "," +
-                "sid=" + sid
-
+  def fillMetric(metricName:String, metricValue: String, time: Long, appId: String, tags: String): util.List[StatusMetric] = {
     val statusMetric: StatusMetric = new StatusMetric
     statusMetric.setEndpoint(appId)
-    statusMetric.setMetric("biteRate")
-//    bill.setTimestamp(new Date().getTime)
+    statusMetric.setMetric(metricName)
+    //    bill.setTimestamp(new Date().getTime)
     statusMetric.setTimestamp(time)
     statusMetric.setStep(60)
-    statusMetric.setValue(brStr.toLong)
+    statusMetric.setValue(metricValue.toLong)
     statusMetric.setCounterType("GAUGE")
     statusMetric.setTags(tags)
 
-    val ts: java.util.List[StatusMetric] = new java.util.ArrayList[StatusMetric]
+    val ts: util.List[StatusMetric] = new util.ArrayList[StatusMetric]
     ts.add(statusMetric)
-    insertFalcon(ts)
+    ts
+  }
+
+  def getTags(userId: String, sType: Integer, roomId: String, mType: Integer, rpc_id: String, streamId: String): String = {
+    val tags = "userId=" + userId + "," +
+      "roomId=" + roomId + "," +
+      "streamId=" + streamId + "," +
+      "stype=" + sType + "," +
+      "mType=" + mType + "," +
+      "rpc_id=" + rpc_id
+    //    + "," +  "sid=" + sid
+    tags
   }
 
   val OPENFALCON_URL="http://172.16.177.172:1988/v1/push"
 
   def insertFalcon(ts: util.List[StatusMetric]): Unit = {
-//def insertFalcon(ts: StatusMetric): Unit = {
     val restTemplate: RestTemplate = new RestTemplate
     val headers: HttpHeaders = new HttpHeaders
     val contentType: MediaType = MediaType.parseMediaType("application/json; charset=UTF-8")
@@ -77,14 +143,10 @@ class StatusOpenFalconSink extends RichSinkFunction[(String, Integer, Long, Stri
     //    val gson: Gson = new Gson
     val gson = new GsonBuilder().disableHtmlEscaping().create();
     val s = gson.toJson(ts)
-    print("s" + s)
-    print("------")
+
     //      val s = JSON.toJSONString(ts)
     val formEntity: HttpEntity[String] = new HttpEntity[String](s, headers)
-    //    val body: String = restTemplate.postForEntity("http://10.25.27.40:1988/v1/push", formEntity, classOf[String]).getBody
     val body: String = restTemplate.postForEntity(OPENFALCON_URL, formEntity, classOf[String]).getBody
-//    logger.info("request  body is: " + s)
-//    logger.info("response  body is: " + body.toString)
   }
 
   override def open( parameters:Configuration) {
