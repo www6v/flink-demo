@@ -134,7 +134,8 @@ class StatusOpenFalconSink extends RichSinkFunction[(String, Integer, Long, Stri
     tags
   }
 
-  val OPENFALCON_URL="http://172.16.177.172:1988/v1/push"
+//  val OPENFALCON_URL = "http://172.16.177.172:1988/v1/push"  /// pre
+  val OPENFALCON_URL = "http://172.16.236.74:1988/v1/push"   /// prd
 
   def insertFalcon(ts: util.List[StatusMetric]): Unit = {
     val restTemplate: RestTemplate = new RestTemplate
