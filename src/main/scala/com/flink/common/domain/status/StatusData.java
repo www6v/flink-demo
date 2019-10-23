@@ -5,6 +5,9 @@ public class StatusData {
    private Integer rtt; ///: int ms, //pub 有效
    private Integer delay; ///:int, //sub 有效
 
+    private Integer cpu;
+    private Integer memory;
+
     private Audio  audio;
     private Video  video;
 
@@ -38,5 +41,21 @@ public class StatusData {
 
     public void setVideo(Video video) {
         this.video = video;
+    }
+
+    public Integer getCpu() {
+        return cpu;
+    }
+
+    public void setCpu(Integer cpu) {
+        this.cpu = cpu;
+    }
+
+    public Integer getMemory() {
+        return memory;
+    }
+
+    public void setMemory(Integer memory) {
+        this.memory = memory;
     }
 }

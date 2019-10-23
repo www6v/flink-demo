@@ -1,8 +1,6 @@
 package com.flink.common.entry
 
-/**
-  * Created by www6v on 2019/8/12.
-  */
+
 object Constants {
   val STATUS_TYPE_INIT = 1
   val STATUS_TYPE_STATUS = 2
@@ -17,6 +15,9 @@ object Constants {
   val LOST_PRE_AUDIO: String = "lostPreAudio"
   val VOLUME_AUDIO: String = "volumeAudio"
 
-//    val OPENFALCON_URL = "http://172.16.177.172:1988/v1/push"  /// pre
-  val OPENFALCON_URL = "http://172.16.236.74:1988/v1/push"   /// prd
+  val CPU: String = "cpuUsage"
+  val MEMORY: String = "memoryUsage"
+
+    val OPENFALCON_URL = "http://172.16.177.172:1988/v1/push"  /// pre
+//  val OPENFALCON_URL = "http://172.16.236.74:1988/v1/push"   /// prd
 }

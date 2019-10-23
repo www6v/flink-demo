@@ -34,6 +34,7 @@ object RtcMonitor   {
 
     handleStatus(env,kafkaProcess)
     handleAudioStatus(env,kafkaProcess)
+    handleResourceStatus(env,kafkaProcess)
 
     handleOperation(env,kafkaOperation)
     handleException(env, kafkaException);
@@ -165,9 +166,55 @@ object RtcMonitor   {
       .keyBy(_.key) //按key分组，可以把key相同的发往同一个slot处理
       .flatMap(new StatusAudioRichFlatMapFunction)
 
-//    result.addSink(new StatusPrometheusSink).setParallelism(1) // new MonitorPrintSink
+    //    result.addSink(new StatusPrometheusSink).setParallelism(1) // new MonitorPrintSink
     result.addSink(new StatusAudioOpenFalconSink).setParallelism(1)
   }
+
+  def handleResourceStatus(env:StreamExecutionEnvironment, kafkasource: FlinkKafkaConsumer08[(String, String)]): Unit = {
+    //    val env = getFlinkEnv(cp, 60000) // 1 min
+    val result = env
+      .addSource(kafkasource)
+      .filter { x => !x.equals("") }
+      .filter {  x => {
+        val body = x._2
+        val i: Int = body.indexOf("rpc_id")
+        val length: Int = "rpc_id\":\"".length
+
+        val index: Int = i + length
+
+        val substring: String = body.substring(index, index + 10)
+        //        System.out.println(substring);
+        if (substring.contains("android") || substring.contains("ios") || substring.contains("win")) {
+          true
+        }
+        else {
+          false
+        }
+      }}
+      .filter { x => !x._2.contains("ios") }  /// ios
+      .filter { x => !x._2.contains("iphone") }  /// iphone
+      .map { x => {
+      try {
+        val rtcClinetLog: RtcStatusLog = JSON.parseObject(x._2, new TypeReference[RtcStatusLog]() {});
+        handleResourceStatusLog(rtcClinetLog)
+      } catch {
+        case ex: Exception => {
+          println("捕获了异常：" + ex);
+          null
+        }
+      }
+    }
+    }
+      .filter { x =>
+        x != null
+      }
+      .keyBy(_.key) //按key分组，可以把key相同的发往同一个slot处理
+      .flatMap(new StatusResourceRichFlatMapFunction)
+
+    result.addSink(new StatusResourceOpenFalconSink).setParallelism(1)
+  }
+
+
 
   def handleOperation(env: StreamExecutionEnvironment, kafkaOperation: FlinkKafkaConsumer08[(String, String)]) = {
     //    val env = getFlinkEnv(cp, 60000) // 1 min
@@ -371,13 +418,6 @@ object RtcMonitor   {
         if (rtcType == Constants.STATUS_TYPE_STATUS) {
 
           val sType = rtcClinetLog.getStype /// 流类别  1 发布流 2 订阅流  // 上行、下行
-//          var delay: Integer = -1
-//          if (sType.equals(Constants.STREAM_PUB)) {
-//            delay = rtcClinetLog.getData.getRtt
-//          }
-//          if (sType.equals(Constants.STREAM_SUB)) {
-//            delay = rtcClinetLog.getData.getDelay
-//          }
 
           ///
           val time = rtcClinetLog.getTs // 时间
@@ -396,6 +436,55 @@ object RtcMonitor   {
 
           new MonitorAudioStatusBean(rid, uid, sType,
             br, lostPre,  volume,
+            time, aid, mType, rpc_id, sid, streamId
+          )
+        }
+        else {
+          null
+        }
+      }
+    }
+  }
+
+  def handleResourceStatusLog(rtcClinetLog: RtcStatusLog): MonitorResourceStatusBean = {
+    if (rtcClinetLog == null ||
+      rtcClinetLog.getData == null ||
+      rtcClinetLog.getData.getAudio == null) {
+      null
+    }
+    else {
+      if (rtcClinetLog.getData.getAudio.getBr == null ||
+        rtcClinetLog.getData.getAudio.getLostpre == null) {
+        null
+      }
+      else {
+
+        val rtcType: Integer = rtcClinetLog.getType /// 1 通话开始 2 通话状态 3 通话结束
+        if (rtcType == Constants.STATUS_TYPE_STATUS) {
+
+          val sType = rtcClinetLog.getStype /// 流类别  1 发布流 2 订阅流  // 上行、下行
+
+          ///
+          val time = rtcClinetLog.getTs // 时间
+          val uid: String = rtcClinetLog.getUid
+          val rid: String = rtcClinetLog.getRid
+          val aid:String = rtcClinetLog.getAid;
+          val mType:Integer = rtcClinetLog.getMtype;
+          val rpc_id:String = rtcClinetLog.getRpc_id
+          val sid:String = rtcClinetLog.getSid
+          val streamId:String = rtcClinetLog.getStreamid
+          ///
+
+//          val br = String.valueOf(rtcClinetLog.getData.getAudio.getBr) /// 码率
+//          val lostPre = String.valueOf(rtcClinetLog.getData.getAudio.getLostpre) /// 丢包率
+//          val volume = String.valueOf(rtcClinetLog.getData.getAudio.getVol) ///  音量
+
+          val cpu = String.valueOf(rtcClinetLog.getData.getCpu) ///
+          val memory = String.valueOf(rtcClinetLog.getData.getMemory) ///
+
+          new MonitorResourceStatusBean(rid, uid, sType,
+//            br, lostPre,  volume,
+            cpu, memory,
             time, aid, mType, rpc_id, sid, streamId
           )
         }

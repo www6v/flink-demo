@@ -10,95 +10,101 @@ import org.apache.flink.streaming.api.functions.sink.RichSinkFunction
 import org.springframework.http.{HttpEntity, HttpHeaders, MediaType}
 import org.springframework.web.client.RestTemplate
 
-class StatusAudioOpenFalconSink extends RichSinkFunction[(String, Integer, Long,
-    String, String,String,
+class StatusResourceOpenFalconSink extends RichSinkFunction[(String, Integer, Long,
+    String, String,
     String,String,Integer,String,String,String)] {
 
   override def invoke(value:(String, Integer, Long,
-    String, String,String,
+    String, String,
     String,String,Integer,String,String,String)): Unit = {
 
-    val tsBiteRate: util.List[StatusMetric] = biteRateMetric(value)
-    val tsLostPre: util.List[StatusMetric] = lostPreMetric(value)
-    val tsVolume : util.List[StatusMetric] = volumeMetric(value)
+//    val tsBiteRate: util.List[StatusMetric] = biteRateMetric(value)
+//    val tsLostPre: util.List[StatusMetric] = lostPreMetric(value)
+//    val tsVolume : util.List[StatusMetric] = volumeMetric(value)
+//
+//    insertFalcon(tsBiteRate)
+//    insertFalcon(tsLostPre)
+//    insertFalcon(tsVolume)
 
-    insertFalcon(tsBiteRate)
-    insertFalcon(tsLostPre)
-    insertFalcon(tsVolume)
+    val tsCpu: util.List[StatusMetric] = cpuMetric(value)
+    val tsMemory: util.List[StatusMetric] = memoryMetric(value)
 
+    insertFalcon(tsCpu)
+    insertFalcon(tsMemory)
 
   }
 
   ///
-  def biteRateMetric(value: (String, Integer, Long,
-    String, String, String,
+  def cpuMetric(value: (String, Integer, Long,
+    String, String,
     String, String, Integer, String, String, String)): util.List[StatusMetric] = {
     val (userId: String, sType: Integer, time: Long,
     appId: String, roomId: String, mType: Integer, rpc_id: String, streamId: String,
-    brStr: String, lostPreStr: String, vol:String) = retriveParam(value)
+    cpu: String, memory: String) = retriveParam(value)
 
     val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId)
 
-    val ts: util.List[StatusMetric] = fillMetric(Constants.BITE_RATE_AUDIO, brStr, time,  appId, tags)
+    val ts: util.List[StatusMetric] = fillMetric(Constants.CPU, cpu, time,  appId, tags)
 
     ts
   }
 
   ///
-  def lostPreMetric(value: (String, Integer, Long,
-    String, String, String,
+  def memoryMetric(value: (String, Integer, Long,
+    String, String,
     String, String, Integer, String, String, String)): util.List[StatusMetric] = {
     val (userId: String, sType: Integer, time: Long,
     appId: String, roomId: String, mType: Integer, rpc_id: String, streamId: String,
-    brStr: String, lostPreStr: String, vol:String) = retriveParam(value);
+    cpu: String, memory: String) = retriveParam(value);
 
     val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId)
 
-    val ts: util.List[StatusMetric] = fillMetric(Constants.LOST_PRE_AUDIO, lostPreStr, time,  appId, tags)
+    val ts: util.List[StatusMetric] = fillMetric(Constants.MEMORY, memory, time,  appId, tags)
 
     ts
   }
 
-  ///
-  def volumeMetric(value: (String, Integer, Long,
-    String, String, String,
-    String, String, Integer, String, String, String)): util.List[StatusMetric] = {
-    val (userId: String, sType: Integer, time: Long,
-    appId: String, roomId: String, mType: Integer, rpc_id: String, streamId: String,
-    brStr: String, lostPreStr: String, vol:String) = retriveParam(value)
-
-    val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId)
-
-    val ts: util.List[StatusMetric] = fillMetric(Constants.VOLUME_AUDIO, vol, time,  appId, tags)
-
-    ts
-  }
+//  ///
+//  def volumeMetric(value: (String, Integer, Long,
+//    String, String, String,
+//    String, String, Integer, String, String, String)): util.List[StatusMetric] = {
+//    val (userId: String, sType: Integer, time: Long,
+//    appId: String, roomId: String, mType: Integer, rpc_id: String, streamId: String,
+//    brStr: String, lostPreStr: String, vol:String) = retriveParam(value)
+//
+//    val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId)
+//
+//    val ts: util.List[StatusMetric] = fillMetric(Constants.VOLUME_AUDIO, vol, time,  appId, tags)
+//
+//    ts
+//  }
 
   def retriveParam(value: (String, Integer, Long,
-                           String, String, String,
+                           String, String,
                            String, String, Integer, String, String, String)):
   (String, Integer, Long,  String, String, Integer, String, String,
-    String, String,String) = {
+    String, String) = {
     val userId = value._1;
     val sType = value._2 // 1: 发布流，2: 订阅流
     val time = value._3;
 
-    val brStr = value._4
-    val lostPreStr = value._5
-    val vol = value._6
+    val cpu = value._4
+    val memory = value._5
+//    val brStr = value._4
+//    val lostPreStr = value._5
+//    val vol = value._6
 //    val frtStr = value._6
 //    val delayStr = value._7.toString
 
-    val appId: String = value._7
-    val roomId: String = value._8
-    val mType: Integer = value._9
-    val rpc_id: String = value._10
+    val appId: String = value._6
+    val roomId: String = value._7
+    val mType: Integer = value._8
+    val rpc_id: String = value._9
     //    val sid: String = value._11
-    val streamId: String = value._12
+    val streamId: String = value._11
 
     (userId, sType, time,  appId, roomId, mType, rpc_id, streamId,
-//      brStr,lostPreStr,frtStr, delayStr)
-    brStr,lostPreStr,vol)
+      cpu,memory)
   }
 
   def fillMetric(metricName:String, metricValue: String, time: Long, appId: String, tags: String): util.List[StatusMetric] = {
