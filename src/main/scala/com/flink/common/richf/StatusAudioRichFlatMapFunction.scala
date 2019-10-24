@@ -7,15 +7,18 @@ import org.apache.flink.util.Collector;
 class StatusAudioRichFlatMapFunction
   extends RichFlatMapFunction[MonitorAudioStatusBean, (String, Integer, Long,
     String, String,String,
-    String,String,Integer,String,String,String)]
+    String,String,Integer,String,String,String ,
+    String,String)]
 {
   private var metric:(String, Integer, Long,
     String, String,String,
-    String,String,Integer,String,String,String) = _
+    String,String,Integer,String,String,String
+    ,String,String) = _
 
   override def flatMap(value: MonitorAudioStatusBean, out: Collector[(String, Integer, Long,
     String, String,String,
-    String,String,Integer,String,String,String)]): Unit = {
+    String,String,Integer,String,String,String
+    ,String,String)]): Unit = {
     val userId: String = value.userId
     val sType: Integer = value.sType
     val time: Long = value.time
@@ -32,9 +35,13 @@ class StatusAudioRichFlatMapFunction
     val sid:String = value.sid
     val streamId:String = value.streamid
 
+    val pubUserid:String = value.pubUserid
+    val pubStreamid:String = value.pubStreamid
+
     metric = (userId, sType, time,
               br, lostPre, volume,
-              aid, roomId, mType, rpc_id, sid, streamId)
+              aid, roomId, mType, rpc_id, sid, streamId,
+              pubUserid, pubStreamid)
 
     out.collect(metric)
   }

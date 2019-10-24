@@ -6,14 +6,17 @@ import org.apache.flink.util.Collector;
 
 class StatusRichFlatMapFunction
   extends RichFlatMapFunction[MonitorStatusBean, (String, Integer, Long, String, String,String,Integer,
-    String,String,Integer,String,String,String)]
+    String,String,Integer,String,String,String,
+    String,String)]
 //    with ListCheckpointed[(String, Long, Long, String, String)]
 {
   private var metric:(String, Integer, Long, String, String,String,Integer,
-    String,String,Integer,String,String,String) = _
+    String,String,Integer,String,String,String,
+    String,String) = _
 
   override def flatMap(value: MonitorStatusBean, out: Collector[(String, Integer, Long, String, String,String,Integer,
-    String,String,Integer,String,String,String)]): Unit = {
+    String,String,Integer,String,String,String,
+    String,String)]): Unit = {
     val userId: String = value.userId
     val sType: Integer = value.sType
     val time: Long = value.time
@@ -29,8 +32,12 @@ class StatusRichFlatMapFunction
     val sid:String = value.sid
     val streamid:String = value.streamid
 
+    val pubUserid:String = value.pubUserid
+    val pubStreamid:String = value.pubStreamid
+
     metric = (userId, sType, time, br, lostPre, frt, delay,
-              aid, roomId, mType, rpc_id, sid, streamid)
+              aid, roomId, mType, rpc_id, sid, streamid,
+              pubUserid,pubStreamid)
     out.collect(metric)
   }
 

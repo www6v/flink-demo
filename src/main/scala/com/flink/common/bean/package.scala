@@ -47,11 +47,12 @@ package object bean {
                         val time:Long,
                         val aid:String,
                         val mType:Integer,
-                        val  rpc_id:String,
+                        val rpc_id:String,
                         val sid:String,
-                        val streamid:String
-//                        var pv: StatisticalIndic
-                              ) {
+                        val streamid:String,
+
+                        val pubUserid:String,
+                        val pubStreamid:String) {
     //    val key = s"${userId} - ${br} - ${time} - ${lostpre}"
     //    val key = s"${userId}"
     @BeanProperty
@@ -60,7 +61,6 @@ package object bean {
     override def toString() = {
       (key).toString()
     }
-    //      (key, pv).toString()
   }
 
 
@@ -78,7 +78,10 @@ package object bean {
                                 val mType:Integer,
                                 val  rpc_id:String,
                                 val sid:String,
-                                val streamid:String
+                                val streamid:String,
+
+                                val pubUserid:String,
+                                val pubStreamid:String
                               ) {
     @BeanProperty
     val key = s"${roomId}"
@@ -104,7 +107,10 @@ package object bean {
                                      val mType:Integer,
                                      val  rpc_id:String,
                                      val sid:String,
-                                     val streamid:String
+                                     val streamid:String,
+
+                                     val pubUserid:String,
+                                     val pubStreamid:String
                                    ) {
     @BeanProperty
     val key = s"${roomId}"

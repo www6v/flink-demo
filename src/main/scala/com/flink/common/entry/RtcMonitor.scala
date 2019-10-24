@@ -118,7 +118,7 @@ object RtcMonitor   {
       .keyBy(_.key) //按key分组，可以把key相同的发往同一个slot处理
       .flatMap(new StatusRichFlatMapFunction)
 
-    result.addSink(new StatusPrometheusSink).setParallelism(1) // new MonitorPrintSink
+//    result.addSink(new StatusPrometheusSink).setParallelism(1) // new MonitorPrintSink
     result.addSink(new StatusOpenFalconSink).setParallelism(1)
     //    result.addSink(new StateRecoverySinkCheckpointFunc(50))
     //    result.addSink(new HbaseReportSink)
@@ -389,9 +389,13 @@ object RtcMonitor   {
           val lostPre = String.valueOf(rtcClinetLog.getData.getVideo.getLostpre) /// 丢包率
           val frt = String.valueOf(rtcClinetLog.getData.getVideo.getFrt) /// 发送的帧率
 
+          val pubUserid : String = rtcClinetLog.getData.getUserid;
+          val pubStreamid : String = rtcClinetLog.getData.getStreamid;
+
           new MonitorStatusBean(rid, uid, sType,
             br, lostPre, frt, delay,
-            time, aid, mType, rpc_id, sid, streamid
+            time, aid, mType, rpc_id, sid, streamid,
+            pubUserid, pubStreamid
           )
         }
         else {
@@ -434,9 +438,13 @@ object RtcMonitor   {
           val lostPre = String.valueOf(rtcClinetLog.getData.getAudio.getLostpre) /// 丢包率
           val volume = String.valueOf(rtcClinetLog.getData.getAudio.getVol) ///  音量
 
+          val pubUserid : String = rtcClinetLog.getData.getUserid;
+          val pubStreamid : String = rtcClinetLog.getData.getStreamid;
+
           new MonitorAudioStatusBean(rid, uid, sType,
             br, lostPre,  volume,
-            time, aid, mType, rpc_id, sid, streamId
+            time, aid, mType, rpc_id, sid, streamId,
+            pubUserid, pubStreamid
           )
         }
         else {
@@ -482,10 +490,14 @@ object RtcMonitor   {
           val cpu = String.valueOf(rtcClinetLog.getData.getCpu) ///
           val memory = String.valueOf(rtcClinetLog.getData.getMemory) ///
 
+          val pubUserid : String = rtcClinetLog.getData.getUserid;
+          val pubStreamid : String = rtcClinetLog.getData.getStreamid;
+
           new MonitorResourceStatusBean(rid, uid, sType,
 //            br, lostPre,  volume,
             cpu, memory,
-            time, aid, mType, rpc_id, sid, streamId
+            time, aid, mType, rpc_id, sid, streamId,
+            pubUserid, pubStreamid
           )
         }
         else {

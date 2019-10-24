@@ -12,11 +12,13 @@ import org.springframework.web.client.RestTemplate
 
 class StatusResourceOpenFalconSink extends RichSinkFunction[(String, Integer, Long,
     String, String,
-    String,String,Integer,String,String,String)] {
+    String,String,Integer,String,String,String,
+    String,String)] {
 
   override def invoke(value:(String, Integer, Long,
     String, String,
-    String,String,Integer,String,String,String)): Unit = {
+    String,String,Integer,String,String,String,
+    String,String)): Unit = {
 
 //    val tsBiteRate: util.List[StatusMetric] = biteRateMetric(value)
 //    val tsLostPre: util.List[StatusMetric] = lostPreMetric(value)
@@ -37,12 +39,13 @@ class StatusResourceOpenFalconSink extends RichSinkFunction[(String, Integer, Lo
   ///
   def cpuMetric(value: (String, Integer, Long,
     String, String,
-    String, String, Integer, String, String, String)): util.List[StatusMetric] = {
+    String, String, Integer, String, String, String,String,String )): util.List[StatusMetric] = {
     val (userId: String, sType: Integer, time: Long,
     appId: String, roomId: String, mType: Integer, rpc_id: String, streamId: String,
-    cpu: String, memory: String) = retriveParam(value)
+    cpu: String, memory: String,
+    pubUserid: String, pubStreamid: String) = retriveParam(value)
 
-    val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId)
+    val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId, pubUserid, pubStreamid)
 
     val ts: util.List[StatusMetric] = fillMetric(Constants.CPU, cpu, time,  appId, tags)
 
@@ -52,12 +55,12 @@ class StatusResourceOpenFalconSink extends RichSinkFunction[(String, Integer, Lo
   ///
   def memoryMetric(value: (String, Integer, Long,
     String, String,
-    String, String, Integer, String, String, String)): util.List[StatusMetric] = {
+    String, String, Integer, String, String, String, String,String)): util.List[StatusMetric] = {
     val (userId: String, sType: Integer, time: Long,
     appId: String, roomId: String, mType: Integer, rpc_id: String, streamId: String,
-    cpu: String, memory: String) = retriveParam(value);
+    cpu: String, memory: String, pubUserid: String, pubStreamid: String) = retriveParam(value);
 
-    val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId)
+    val tags: String = getTags(userId, sType, roomId, mType, rpc_id, streamId, pubUserid, pubStreamid)
 
     val ts: util.List[StatusMetric] = fillMetric(Constants.MEMORY, memory, time,  appId, tags)
 
@@ -81,9 +84,11 @@ class StatusResourceOpenFalconSink extends RichSinkFunction[(String, Integer, Lo
 
   def retriveParam(value: (String, Integer, Long,
                            String, String,
-                           String, String, Integer, String, String, String)):
+                           String, String, Integer, String, String, String,
+                           String,String)):
   (String, Integer, Long,  String, String, Integer, String, String,
-    String, String) = {
+    String, String,
+    String,String) = {
     val userId = value._1;
     val sType = value._2 // 1: 发布流，2: 订阅流
     val time = value._3;
@@ -103,8 +108,12 @@ class StatusResourceOpenFalconSink extends RichSinkFunction[(String, Integer, Lo
     //    val sid: String = value._11
     val streamId: String = value._11
 
+    val pubUserid: String = value._12
+    val pubStreamid: String = value._13
+
     (userId, sType, time,  appId, roomId, mType, rpc_id, streamId,
-      cpu,memory)
+      cpu,memory,
+      pubUserid, pubStreamid )
   }
 
   def fillMetric(metricName:String, metricValue: String, time: Long, appId: String, tags: String): util.List[StatusMetric] = {
@@ -123,13 +132,17 @@ class StatusResourceOpenFalconSink extends RichSinkFunction[(String, Integer, Lo
     ts
   }
 
-  def getTags(userId: String, sType: Integer, roomId: String, mType: Integer, rpc_id: String, streamId: String): String = {
+  def getTags(userId: String, sType: Integer, roomId: String, mType: Integer, rpc_id: String, streamId: String,
+              pubUserid: String, pubStreamid: String): String = {
     val tags = "userId=" + userId + "," +
       "roomId=" + roomId + "," +
       "streamId=" + streamId + "," +
       "stype=" + sType + "," +
       "mType=" + mType + "," +
-      "rpc_id=" + rpc_id
+      "rpc_id=" + rpc_id + "," +
+      "pubUserid=" + pubUserid + "," +
+      "pubStreamid=" + pubStreamid
+
     //    + "," +  "sid=" + sid
     tags
   }

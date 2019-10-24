@@ -8,6 +8,9 @@ public class StatusData {
     private Integer cpu;
     private Integer memory;
 
+    private String userid;
+    private String streamid;
+
     private Audio  audio;
     private Video  video;
 
@@ -57,5 +60,21 @@ public class StatusData {
 
     public void setMemory(Integer memory) {
         this.memory = memory;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public String getStreamid() {
+        return streamid;
+    }
+
+    public void setStreamid(String streamid) {
+        this.streamid = streamid;
     }
 }
