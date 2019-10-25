@@ -63,7 +63,7 @@ public class StatusData {
     }
 
     public String getUserid() {
-        if (userid.equals("")) {
+        if (userid==null || userid.equals("")) {
             return "no" + "Userid";
         }
         return userid;
@@ -74,7 +74,7 @@ public class StatusData {
     }
 
     public String getStreamid() {
-        if (streamid.equals("")) {
+        if (streamid==null || streamid.equals("")) {
             return "no" + "Streamid";
         }
         return streamid;
