@@ -9,8 +9,8 @@ import org.apache.ibatis.session.SqlSession
 object  RoomStatusDataAccess {
   def insertUserDetailDB(value: (String, String, Integer, Long, String, String, String, String, String, String, Integer, String)) = {
     val statusType = value._3
-    if(statusType.equals(Constants.STATUS_TYPE_INIT ||
-      Constants.STATUS_TYPE_LEAVE)) {
+    if(statusType.equals(Constants.STATUS_TYPE_INIT) ||
+      statusType.equals(Constants.STATUS_TYPE_LEAVE) ) {
       val userDetail: UserDetail = new UserDetail
       userDetail.setUserId(value._1)
       userDetail.setRoomId(value._2)
