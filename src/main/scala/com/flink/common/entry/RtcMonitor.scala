@@ -48,8 +48,8 @@ object RtcMonitor   {
     val result = env
       .addSource(kafkasource)
       .filter { x => !x.equals("") }
-      .filter { x => !x._2.contains("ios") }  /// ios
-      .filter { x => !x._2.contains("iphone") }  /// iphone
+//      .filter { x => !x._2.contains("ios") }  /// ios
+//      .filter { x => !x._2.contains("iphone") }  /// iphone
       .map { x => {
       try {
         //          val rtcClinetLog: RtcInitLog = JSON.parseObject(x._2, new TypeReference[RtcInitLog]() {});
@@ -98,8 +98,8 @@ object RtcMonitor   {
           false
         }
       }}
-      .filter { x => !x._2.contains("ios") }  /// ios
-      .filter { x => !x._2.contains("iphone") }  /// iphone
+//      .filter { x => !x._2.contains("ios") }  /// ios
+//      .filter { x => !x._2.contains("iphone") }  /// iphone
       .map { x => {
       try {
         val rtcClinetLog: RtcStatusLog = JSON.parseObject(x._2, new TypeReference[RtcStatusLog]() {});
@@ -146,8 +146,8 @@ object RtcMonitor   {
           false
         }
       }}
-      .filter { x => !x._2.contains("ios") }  /// ios
-      .filter { x => !x._2.contains("iphone") }  /// iphone
+//      .filter { x => !x._2.contains("ios") }  /// ios
+//      .filter { x => !x._2.contains("iphone") }  /// iphone
       .map { x => {
       try {
         val rtcClinetLog: RtcStatusLog = JSON.parseObject(x._2, new TypeReference[RtcStatusLog]() {});
@@ -191,8 +191,8 @@ object RtcMonitor   {
           false
         }
       }}
-      .filter { x => !x._2.contains("ios") }  /// ios
-      .filter { x => !x._2.contains("iphone") }  /// iphone
+//      .filter { x => !x._2.contains("ios") }  /// ios
+//      .filter { x => !x._2.contains("iphone") }  /// iphone
       .map { x => {
       try {
         val rtcClinetLog: RtcStatusLog = JSON.parseObject(x._2, new TypeReference[RtcStatusLog]() {});
@@ -221,8 +221,8 @@ object RtcMonitor   {
     val result = env
       .addSource(kafkaOperation)
       .filter { x => !x.equals("") }
-      .filter { x => !x._2.contains("ios") }  /// ios
-      .filter { x => !x._2.contains("iphone") }  /// iphone
+//      .filter { x => !x._2.contains("ios") }  /// ios
+//      .filter { x => !x._2.contains("iphone") }  /// iphone
       .map { x => {
       try {
         val opertionLog: OpertionLog = JSON.parseObject(x._2, new TypeReference[OpertionLog]() {});
@@ -251,8 +251,8 @@ object RtcMonitor   {
     val result = env
       .addSource(kafkaException)
       .filter { x => !x.equals("") }
-      .filter { x => !x._2.contains("ios") }  /// ios
-      .filter { x => !x._2.contains("iphone") }  /// iphone
+//      .filter { x => !x._2.contains("ios") }  /// ios
+//      .filter { x => !x._2.contains("iphone") }  /// iphone
       .map { x => {
       try {
         val exceptionLog: ExceptionLog = JSON.parseObject(x._2, new TypeReference[ExceptionLog]() {});
