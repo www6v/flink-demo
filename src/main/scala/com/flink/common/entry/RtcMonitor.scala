@@ -90,8 +90,10 @@ object RtcMonitor   {
         val index: Int = i + length
 
         val substring: String = body.substring(index, index + 10)
-        //        System.out.println(substring);
-        if (substring.contains("android") || substring.contains("ios") || substring.contains("win")) {
+        if (substring.contains("android") ||
+            substring.contains("ios") ||
+            substring.contains("win") ||
+            substring.contains("web")) {
           true
         }
         else {
@@ -139,7 +141,10 @@ object RtcMonitor   {
 
         val substring: String = body.substring(index, index + 10)
         //        System.out.println(substring);
-        if (substring.contains("android") || substring.contains("ios") || substring.contains("win")) {
+        if (substring.contains("android") ||
+            substring.contains("ios") ||
+            substring.contains("win") ||
+            substring.contains("web")) {
           true
         }
         else {
@@ -184,7 +189,10 @@ object RtcMonitor   {
 
         val substring: String = body.substring(index, index + 10)
         //        System.out.println(substring);
-        if (substring.contains("android") || substring.contains("ios") || substring.contains("win")) {
+        if (substring.contains("android") ||
+            substring.contains("ios") ||
+            substring.contains("win") ||
+            substring.contains("web")) {
           true
         }
         else {
