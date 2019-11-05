@@ -43,12 +43,13 @@ class LogHandle {
     if (rtcClinetLog == null ||
       rtcClinetLog.getData == null ||
       rtcClinetLog.getData.getVideo == null) {
+      errorHandleStatus(rtcClinetLog, rtcClinetLog.getType)
       null
     }
     else {
       if (rtcClinetLog.getData.getVideo.getBr == null ||
         rtcClinetLog.getData.getVideo.getLostpre == null) {
-        null
+        errorHandleStatus(rtcClinetLog, rtcClinetLog.getType)
       }
       else {
 
@@ -89,33 +90,36 @@ class LogHandle {
           )
         }
         else {
-
-          logger.error("Status" + " error log." +
-            "rid: " + rtcClinetLog.getRid +
-            "uid: " + rtcClinetLog.getUid +
-            "statusType: " + statusType +
-            "Ts" + rtcClinetLog.getTs )
-
-          new MonitorStatusBean(MOCK+"Rid", MOCK+"uid", 0,
-            "0", "0", "0", 0,
-            new Date().getTime, MOCK+"aid", 0, MOCK+"rpc_id", MOCK+"sid", MOCK+"streamid",
-            MOCK+"pubUserid", MOCK+"pubStreamid"
-          )
+          errorHandleStatus(rtcClinetLog, statusType)
         }
       }
     }
+  }
+
+  def errorHandleStatus(rtcClinetLog: RtcStatusLog, statusType: Integer): MonitorStatusBean = {
+    logger.error("Status" + " error log." +
+      "rid: " + rtcClinetLog.getRid +
+      "uid: " + rtcClinetLog.getUid +
+      "statusType: " + statusType +
+      "Ts" + rtcClinetLog.getTs)
+
+    new MonitorStatusBean(MOCK + "Rid", MOCK + "uid", 0,
+      "0", "0", "0", 0,
+      new Date().getTime, MOCK + "aid", 0, MOCK + "rpc_id", MOCK + "sid", MOCK + "streamid",
+      MOCK + "pubUserid", MOCK + "pubStreamid"
+    )
   }
 
   def handleAudioStatusLog(rtcClinetLog: RtcStatusLog): MonitorAudioStatusBean = {
     if (rtcClinetLog == null ||
       rtcClinetLog.getData == null ||
       rtcClinetLog.getData.getAudio == null) {
-      null
+      handleErrorAudioStatus(rtcClinetLog, rtcClinetLog.getType)
     }
     else {
       if (rtcClinetLog.getData.getAudio.getBr == null ||
         rtcClinetLog.getData.getAudio.getLostpre == null) {
-        null
+        handleErrorAudioStatus(rtcClinetLog, rtcClinetLog.getType)
       }
       else {
 
@@ -150,32 +154,36 @@ class LogHandle {
         }
         else {
 
-          logger.error("AudioStatus " + " error log." +
-            "rid: " + rtcClinetLog.getRid +
-            "uid: " + rtcClinetLog.getUid +
-            "statusType: " + statusType +
-            "Ts" + rtcClinetLog.getTs )
-
-          new MonitorAudioStatusBean(MOCK+"rid", MOCK+"uid", 0,
-            "0", "0",  "0",
-            new Date().getTime, MOCK+"aid", 0, MOCK+"rpc_id", MOCK+"sid", MOCK+"streamId",
-            MOCK+"pubUserid", MOCK+"pubStreamid"
-          )
+          handleErrorAudioStatus(rtcClinetLog, statusType)
         }
       }
     }
+  }
+
+  def handleErrorAudioStatus(rtcClinetLog: RtcStatusLog, statusType: Integer): MonitorAudioStatusBean = {
+    logger.error("AudioStatus " + " error log." +
+      "rid: " + rtcClinetLog.getRid +
+      "uid: " + rtcClinetLog.getUid +
+      "statusType: " + statusType +
+      "Ts" + rtcClinetLog.getTs)
+
+    new MonitorAudioStatusBean(MOCK + "rid", MOCK + "uid", 0,
+      "0", "0", "0",
+      new Date().getTime, MOCK + "aid", 0, MOCK + "rpc_id", MOCK + "sid", MOCK + "streamId",
+      MOCK + "pubUserid", MOCK + "pubStreamid"
+    )
   }
 
   def handleResourceStatusLog(rtcClinetLog: RtcStatusLog): MonitorResourceStatusBean = {
     if (rtcClinetLog == null ||
       rtcClinetLog.getData == null ||
       rtcClinetLog.getData.getAudio == null) {
-      null
+      handleErrorResouceStatus(rtcClinetLog, rtcClinetLog.getType)
     }
     else {
       if (rtcClinetLog.getData.getAudio.getBr == null ||
         rtcClinetLog.getData.getAudio.getLostpre == null) {
-        null
+        handleErrorResouceStatus(rtcClinetLog, rtcClinetLog.getType)
       }
       else {
 
@@ -208,20 +216,24 @@ class LogHandle {
           )
         }
         else {
-          logger.error("ResourceStatus " + " error log." +
-            "rid: " + rtcClinetLog.getRid +
-            "uid: " + rtcClinetLog.getUid +
-            "statusType: " + statusType +
-            "Ts" + rtcClinetLog.getTs )
-
-          new MonitorResourceStatusBean(MOCK+"rid", MOCK+"uid", 0,
-            "0", "0",
-            new Date().getTime, MOCK+"aid", 0, MOCK+"rpc_id", MOCK+"sid", MOCK+"streamId",
-            MOCK+"pubUserid", MOCK+"pubStreamid"
-          )
+          handleErrorResouceStatus(rtcClinetLog, statusType)
         }
       }
     }
+  }
+
+  def handleErrorResouceStatus(rtcClinetLog: RtcStatusLog, statusType: Integer): MonitorResourceStatusBean = {
+    logger.error("ResourceStatus " + " error log." +
+      "rid: " + rtcClinetLog.getRid +
+      "uid: " + rtcClinetLog.getUid +
+      "statusType: " + statusType +
+      "Ts" + rtcClinetLog.getTs)
+
+    new MonitorResourceStatusBean(MOCK + "rid", MOCK + "uid", 0,
+      "0", "0",
+      new Date().getTime, MOCK + "aid", 0, MOCK + "rpc_id", MOCK + "sid", MOCK + "streamId",
+      MOCK + "pubUserid", MOCK + "pubStreamid"
+    )
   }
 
   def handleOpertionLog(rtcOpertionLog: OpertionLog): MonitorOpertionBean = {
