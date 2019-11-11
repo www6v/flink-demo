@@ -9,8 +9,8 @@ import org.apache.flink.configuration.Configuration
 import org.apache.flink.util.Collector;
 
 class InitRichFlatMapFunction
-  extends RichFlatMapFunction[MonitorRoomBean, ((String,  String, Long, Long, Long, Boolean , Integer,Integer,Integer),
-    (String,String, Integer, Long,  String, String, String, String, String, String,Integer, String))]
+  extends RichFlatMapFunction[MonitorRoomBean, ((String,String,  String, Long, Long, Long, Boolean , Integer,Integer,Integer),
+    (String,String,String, Integer, Long,  String, String, String, String, String, String,Integer, String))]
 {
   private var currentUserCount: ValueState[Integer] = _
   private var accumulationUserCount: ValueState[Integer] = _
@@ -44,8 +44,8 @@ class InitRichFlatMapFunction
 
 
 
-  override def flatMap(value: MonitorRoomBean, out: Collector[((String, String, Long, Long, Long, Boolean, Integer,Integer,Integer),
-    (String,String, Integer, Long, String, String, String, String, String, String,Integer, String))]): Unit = {
+  override def flatMap(value: MonitorRoomBean, out: Collector[((String,String, String, Long, Long, Long, Boolean, Integer,Integer,Integer),
+    (String,String,String, Integer, Long, String, String, String, String, String, String,Integer, String))]): Unit = {
     var currentUserAmount = currentUserCount.value
     var accumulationUserAmount = accumulationUserCount.value
     var peekUserAmount = peekUserCount.value
@@ -57,6 +57,7 @@ class InitRichFlatMapFunction
     val userId: String = value.userId
     val time: Long = value.time
     val statusType: Integer = value.statusType
+    val appId: String = value.appId
 
     var sdkv:String =null
     var agent:String =null
@@ -125,8 +126,8 @@ class InitRichFlatMapFunction
     }
 
     //    metric = (roomId, userId, time, currentUserAmount)
-    out.collect( ((roomId, userId, time, startTime, endTime, roomState, currentUserAmount,peekUserAmount ,accumulationUserAmount ),
-      (userId, roomId, statusType, time, sdkv, agent, device, system, network, cpu, mem, region))
+    out.collect( ((appId, roomId, userId, time, startTime, endTime, roomState, currentUserAmount,peekUserAmount ,accumulationUserAmount ),
+      (appId, userId, roomId, statusType, time, sdkv, agent, device, system, network, cpu, mem, region))
     )
 
     currentUserCount.update(currentUserAmount)

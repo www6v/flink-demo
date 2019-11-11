@@ -1,6 +1,8 @@
 package com.flink.common.mybatis.entity;
 
 public class UserDetail {
+    private String appId;
+
     private Integer id;
     private String userId;
     private String roomId;
@@ -119,5 +121,13 @@ public class UserDetail {
     }
     public void setRegion(String region) {
         this.region = region;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 }

@@ -26,7 +26,9 @@ class LogHandle {
       val time: Long = rtcClinetLog.getTs // 时间
       val data: InitData = rtcClinetLog.getData
 
-      new MonitorRoomBean(rid, uid, statusType, time, data)
+      val aid: String = rtcClinetLog.getAid
+
+      new MonitorRoomBean(aid, rid, uid, statusType, time, data)
     }
     else {
       logger.error("Init" + " error log." +
@@ -35,7 +37,7 @@ class LogHandle {
         "statusType: " + statusType +
         "Ts" + rtcClinetLog.getTs )
 
-      new MonitorRoomBean("mockRid", "mockUid", Constants.STATUS_TYPE_INIT, new Date().getTime, rtcClinetLog.getData)
+      new MonitorRoomBean("mockAid", "mockRid", "mockUid", Constants.STATUS_TYPE_INIT, new Date().getTime, rtcClinetLog.getData)
     }
   }
 

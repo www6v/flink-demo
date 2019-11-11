@@ -1,6 +1,8 @@
 package com.flink.common.mybatis.entity;
 
 public class RoomStatus {
+    private String appId;
+
     private String roomId;
     private String userId;
     private Long time;
@@ -82,5 +84,13 @@ public class RoomStatus {
 
     public void setAccumulationUserAmount(Integer accumulationUserAmount) {
         this.accumulationUserAmount = accumulationUserAmount;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 }

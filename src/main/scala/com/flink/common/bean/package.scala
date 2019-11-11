@@ -121,6 +121,7 @@ package object bean {
   }
 
   case class MonitorRoomBean(
+                          val appId: String,
                           val roomId: String,
                           val userId: String,
                           val statusType:Integer,
