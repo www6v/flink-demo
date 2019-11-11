@@ -18,6 +18,6 @@ object Constants {
   val CPU: String = "cpuUsage"
   val MEMORY: String = "memoryUsage"
 
-    val OPENFALCON_URL = "http://172.16.177.172:1988/v1/push"  /// pre
-//  val OPENFALCON_URL = "http://172.16.236.74:1988/v1/push"   /// prd
+//    val OPENFALCON_URL = "http://172.16.177.172:1988/v1/push"  /// pre
+  val OPENFALCON_URL = "http://172.16.236.74:1988/v1/push"   /// prd
 }
