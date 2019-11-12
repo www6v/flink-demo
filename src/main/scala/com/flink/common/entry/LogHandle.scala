@@ -242,21 +242,24 @@ class LogHandle {
     val statusType: Integer = rtcOpertionLog.getType
     if (statusType == Constants.STATUS_TYPE_OPERATION) {
 
+      val aid: String = rtcOpertionLog.getAid
+
       val rid: String = rtcOpertionLog.getRid
       val uid: String = rtcOpertionLog.getUid
       val time: Long = rtcOpertionLog.getTs // 时间
       val data: OpertionData = rtcOpertionLog.getData
 
-      new MonitorOpertionBean(rid, uid, statusType, time, data)
+      new MonitorOpertionBean(aid, rid, uid, statusType, time, data)
     }
     else {
       logger.error("Opertion " + " error log." +
+        "aid: " + rtcOpertionLog.getAid +
         "rid: " + rtcOpertionLog.getRid +
         "uid: " + rtcOpertionLog.getUid +
         "statusType: " + statusType +
         "Ts" + rtcOpertionLog.getTs )
 
-      new MonitorOpertionBean(MOCK+"rid", MOCK+"uid", statusType, new Date().getTime, rtcOpertionLog.getData)
+      new MonitorOpertionBean(MOCK+"aid", MOCK+"rid", MOCK+"uid", statusType, new Date().getTime, rtcOpertionLog.getData)
     }
   }
 
@@ -264,21 +267,24 @@ class LogHandle {
     val statusType: Integer = exceptionLog.getType
     if (statusType == Constants.STATUS_TYPE_EXCEPTION) {
 
+      val aid: String = exceptionLog.getAid
+
       val rid: String = exceptionLog.getRid
       val uid: String = exceptionLog.getUid
       val time: Long = exceptionLog.getTs // 时间
       val data: ExceptionData = exceptionLog.getData
 
-      new MonitorExceptionBean(rid, uid, statusType, time, data)
+      new MonitorExceptionBean(aid, rid, uid, statusType, time, data)
     }
     else {
       logger.error("Exception " + " error log." +
+        "aid: " + exceptionLog.getAid +
         "rid: " + exceptionLog.getRid +
         "uid: " + exceptionLog.getUid +
         "statusType: " + statusType +
         "Ts" + exceptionLog.getTs )
 
-      new MonitorExceptionBean(MOCK+"rid", MOCK+"uid", statusType, new Date().getTime, exceptionLog.getData)
+      new MonitorExceptionBean(MOCK+"aid", MOCK+"rid", MOCK+"uid", statusType, new Date().getTime, exceptionLog.getData)
     }
   }
 }
