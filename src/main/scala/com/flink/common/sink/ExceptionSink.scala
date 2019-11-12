@@ -4,9 +4,9 @@ import com.flink.common.mybatis.repository.{ExceptionDataAccess, OperationDataAc
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction
 
-class ExceptionSink extends RichSinkFunction[(String, String, Integer, Long, Integer)] {
+class ExceptionSink extends RichSinkFunction[(String, String, String, Integer, Long, Integer)] {
 
-  override def invoke(value:(String, String, Integer, Long, Integer)): Unit = {
+  override def invoke(value:(String, String, String, Integer, Long, Integer)): Unit = {
     ExceptionDataAccess.insertDB(value)
   }
 

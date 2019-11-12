@@ -138,6 +138,7 @@ package object bean {
   }
 
   case class MonitorOpertionBean(
+                              val appId: String,
                               val roomId: String,
                               val userId: String,
                               val statusType:Integer,
@@ -153,6 +154,7 @@ package object bean {
   }
 
   case class MonitorExceptionBean(
+                                  val appId: String,
                                   val roomId: String,
                                   val userId: String,
                                   val statusType:Integer,

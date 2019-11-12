@@ -14,10 +14,7 @@ import org.slf4j.LoggerFactory.getLogger
 import org.slf4j.{LoggerFactory, Logger}
 
 import scala.collection.JavaConversions._
-
-import org.slf4j.LoggerFactory
 import org.slf4j.Logger
-
 
 object RtcMonitor  extends LogHandle {
   //  val cp = "file:///C:\\Users\\Master\\Desktop\\rocksdbcheckpoint"

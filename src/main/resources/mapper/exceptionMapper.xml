@@ -4,8 +4,10 @@
 <mapper namespace="com.flink.common.mybatis.mapper.ExceptionMapper">
 
     <insert id="insertException" parameterType="ExceptionPO">
-       insert into user_exception(room_id,	user_id, status_type, time, exception_type)
-        values (#{roomId}, #{userId}, #{statusType}, #{time}, #{exceptionType})
+       insert into user_exception(app_id, room_id,	user_id, status_type, time, exception_type)
+        values (#{appId}, #{roomId}, #{userId}, #{statusType}, #{time}, #{exceptionType})
     </insert>
 
 </mapper>
+
+

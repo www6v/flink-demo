@@ -7,13 +7,15 @@ import org.apache.ibatis.session.SqlSession
 ;
 
 object  OperationDataAccess {
-  def insertDB(value: (String, String, Integer, Long, Integer)): Unit = {
+  def insertDB(value: (String, String, String, Integer, Long, Integer)): Unit = {
     val operation: Operation = new Operation
-    operation.setRoomId(value._1)
-    operation.setUserId(value._2)
-    operation.setStatusType(value._3)
-    operation.setTime(value._4)
-    operation.setOpertionType(value._5)
+
+    operation.setAppId( value._1)
+    operation.setRoomId(value._2)
+    operation.setUserId(value._3)
+    operation.setStatusType(value._4)
+    operation.setTime(value._5)
+    operation.setOpertionType(value._6)
 
     val sqlSession: SqlSession = MybatisUtil.getSqlSession
     val operationMapper: OperationMapper = sqlSession.getMapper(classOf[OperationMapper])

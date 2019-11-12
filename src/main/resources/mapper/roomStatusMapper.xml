@@ -4,9 +4,9 @@
 <mapper namespace="com.flink.common.mybatis.mapper.RoomStatusMapper">
 
     <insert id="insertRoomStatus" parameterType="RoomStatus" >
-       insert into room_status(room_id, user_id, time, start_time, end_time, room_state, current_user_amount, peek_user_amount, accumulation_user_amount)
-        values (#{roomId}, #{userId}, #{time}, #{startTime}, #{endTime}, #{roomState}, #{currentUserAmount}, #{peekUserAmount}, #{accumulationUserAmount})
-        ON DUPLICATE KEY UPDATE room_id=#{roomId},user_id=#{userId}, time=#{time} , start_time=#{startTime}, end_time=#{endTime}, room_state=#{roomState}, current_user_amount=#{currentUserAmount}, peek_user_amount=#{peekUserAmount}, accumulation_user_amount=#{accumulationUserAmount}
+       insert into room_status(app_id, room_id, user_id, time, start_time, end_time, room_state, current_user_amount, peek_user_amount, accumulation_user_amount)
+        values ( #{appId}, #{roomId}, #{userId}, #{time}, #{startTime}, #{endTime}, #{roomState}, #{currentUserAmount}, #{peekUserAmount}, #{accumulationUserAmount})
+        ON DUPLICATE KEY UPDATE app_id=#{appId},room_id=#{roomId},user_id=#{userId}, time=#{time} , start_time=#{startTime}, end_time=#{endTime}, room_state=#{roomState}, current_user_amount=#{currentUserAmount}, peek_user_amount=#{peekUserAmount}, accumulation_user_amount=#{accumulationUserAmount}
     </insert>
 
     <!-- bug fix -->

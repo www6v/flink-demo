@@ -4,8 +4,10 @@
 <mapper namespace="com.flink.common.mybatis.mapper.OperationMapper">
 
     <insert id="insertOperation" parameterType="Operation">
-       insert into user_operation(room_id,	user_id, status_type, time, opertion_type)
-        values (#{roomId}, #{userId}, #{statusType}, #{time}, #{opertionType})
+       insert into user_operation(app_id, room_id,	user_id, status_type, time, opertion_type)
+        values (#{appId}, #{roomId}, #{userId}, #{statusType}, #{time}, #{opertionType})
     </insert>
 
 </mapper>
+
+

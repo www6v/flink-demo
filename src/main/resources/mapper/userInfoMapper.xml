@@ -17,8 +17,8 @@
     <!--</insert>-->
 
     <insert id="insertUserInfo" parameterType="UserInfo">
-        insert into  user_time(user_id, room_id, status_type ,time)
-        values (#{userId}, #{roomId}, #{statusType}, #{time})
+        insert into  user_time(app_id, user_id, room_id, status_type ,time)
+        values (#{appId}, #{userId}, #{roomId}, #{statusType}, #{time})
     </insert>
 
 </mapper>

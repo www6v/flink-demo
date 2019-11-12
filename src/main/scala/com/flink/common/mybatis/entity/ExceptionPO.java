@@ -1,6 +1,8 @@
 package com.flink.common.mybatis.entity;
 
 public class ExceptionPO {
+    private String appId;
+
     private String roomId;
     private String userId;
     private Integer statusType;
@@ -41,5 +43,12 @@ public class ExceptionPO {
     }
     public void setExceptionType(Integer exceptionType) {
         this.exceptionType = exceptionType;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 }
