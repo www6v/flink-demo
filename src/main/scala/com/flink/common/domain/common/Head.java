@@ -1,6 +1,8 @@
 package com.flink.common.domain.common;
 
 
+import java.util.Date;
+
 public class Head {
     protected String method;
     protected String version;
@@ -64,7 +66,8 @@ public class Head {
     }
 
     public Long getTs() {
-        return ts;
+        return new Date().getTime();
+        // return ts;
     }
 
     public void setTs(Long ts) {

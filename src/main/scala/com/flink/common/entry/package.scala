@@ -8,8 +8,8 @@ import org.apache.flink.contrib.streaming.state.RocksDBStateBackend
 import org.apache.flink.runtime.state.filesystem.FsStateBackend
 import org.apache.flink.streaming.api.environment.CheckpointConfig.ExternalizedCheckpointCleanup
 
-//package object entry extends PreEnvironmentalKey {
-package object entry extends PrdEnvironmentalKey {
+package object entry extends PreEnvironmentalKey {
+//package object entry extends PrdEnvironmentalKey {
 
   def getFlinkEnv(checkpointPath: String,interval:Long = 6000) = {
     val env = StreamExecutionEnvironment.getExecutionEnvironment

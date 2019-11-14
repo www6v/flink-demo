@@ -2,6 +2,8 @@ package com.flink.common.domain.joinLeave;
 
 import com.flink.common.domain.common.RtcParentLog;
 
+import java.util.Date;
+
 public class RtcInitOrLeaveLog extends RtcParentLog {
 
     private InitData data;
@@ -55,7 +57,8 @@ public class RtcInitOrLeaveLog extends RtcParentLog {
     }
 
     public Long getTs() {
-        return ts;
+        return new Date().getTime();
+//        return ts;
     }
 
     public void setTs(Long ts) {

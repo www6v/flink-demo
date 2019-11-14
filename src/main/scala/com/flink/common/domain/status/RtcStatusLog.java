@@ -2,6 +2,8 @@ package com.flink.common.domain.status;
 
 import com.flink.common.domain.common.Head;
 
+import java.util.Date;
+
 public class RtcStatusLog extends Head {
     private StatusData data;
 
@@ -54,7 +56,8 @@ public class RtcStatusLog extends Head {
     }
 
     public Long getTs() {
-        return super.getTs();
+        return new Date().getTime();
+//        return super.getTs();
     }
 
     public void setTs(Long ts) {
